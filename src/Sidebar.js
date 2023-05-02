@@ -1,5 +1,5 @@
 import { Button, Card, CardHeader, Grid, TextField, Typography } from "@mui/material";
-import { useNavigate} from "react-router-dom";
+import { useNavigate, useLocation} from "react-router-dom";
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -22,44 +22,36 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 240;
 
-function Chat() {
-  const navigate = useNavigate();
+const useStyles = ({
+  page: {
+    background: '#f9f9f9',
+    width: '100%',
+  },
+  root: {
+    display: 'flex',
+  },
+  drawer: {
+    width: drawerWidth,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  active: {
+    background: '#f4f4f4'
+  },
+})
 
-  const handleHome = () => {
-    navigate("/home");
-  }
-
-  const handleSignOut = () => {
-    navigate("/");
-  }
-
-  return (
-    <Grid>
-      <Typography>
-        This is the conversations page
-      </Typography>
-    <Button onClick={handleHome}>
-      Home
-    </Button>
-    <Button onClick={handleSignOut}>
-      Sign Out
-    </Button>
-    </Grid>
-
-  );
-}
-
-function PermanentDrawerLeft() {
+function Sidebar({ children }) {
   const navigate = useNavigate();
   const menuItems = [
     {
       text: 'Home',
-      icon: <HomeIcon color="primary"/>,
+      icon: <HomeIcon color="secondary"/>,
       path: '/home'
     },
     {
       text: "Sign Out",
-      icon: <LogoutIcon color="primary" />,
+      icon: <LogoutIcon color="secondary" />,
       path: '/'
     }
   ]
@@ -67,16 +59,16 @@ function PermanentDrawerLeft() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      {/*<AppBar
+      <AppBar
         position="fixed"
         sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
       >
         <Toolbar>
           <Typography variant="h6" noWrap component="div">
-            ImageGPT
+            Permanent drawer
           </Typography>
         </Toolbar>
-      </AppBar>*/}
+      </AppBar>
       <Drawer
         sx={{
           width: drawerWidth,
@@ -89,28 +81,31 @@ function PermanentDrawerLeft() {
         variant="permanent"
         anchor="left"
       >
-        <AppBar
-          position="relative"
-          sx={{ width: drawerWidth, height: 80}}
-          style={{ background: '#26487A'}}
-        >
-          <Toolbar>
-            <Typography variant="h5" noWrap component="div">
-              <Box sx={{ fontWeight: 'bold', mt: 1.5}}>ImageGPT</Box>
-            </Typography>
-          </Toolbar>
-      </AppBar>
+        <Toolbar />
+        <Divider />
 
         {/*output list items */}
         <List>
           {menuItems.map(item => (
-            <ListItem button divider
+            <ListItem button
             key={item.text}
-            sx={{height: 60, p: 3, mb: 1.5}}
             onClick={() => navigate(item.path)}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text}/> 
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
+          {['All mail', 'Trash', 'Spam'].map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
             </ListItem>
           ))}
         </List>
@@ -153,4 +148,4 @@ function PermanentDrawerLeft() {
 }
 
 //export default Chat;
-export default PermanentDrawerLeft;
+export default Sidebar;
