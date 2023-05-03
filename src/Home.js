@@ -1,6 +1,6 @@
-import { Button, Card, CardHeader, Grid, TextField, Typography } from "@mui/material";
+import { Button, Grid, Typography, Stack} from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+import CardHome from "./CardHome";
 
 function Home_() {
   const navigate = useNavigate();
@@ -9,15 +9,47 @@ function Home_() {
     navigate("/Chat");
   }
 
+
   return (
-    <Grid>
-      <Typography>
-      This is the home page
-    </Typography>
-    <Button onClick={handleNewQ}>
-      Start a new question
-    </Button>
+    <Grid sx={{
+      display:'flex',
+      flexDirection:'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width:'100%'
+    }}>
+      
+      <Button 
+        onClick={handleNewQ}
+        variant='outlined'
+        sx={{
+          margin:'20px',
+          fontSize:'15px',
+          '&:hover':{
+            boxShadow:'20px',
+            borderColor: 'primary',
+            backgroundColor: 'none',
+            cursor:'default'
+          }
+        }}>
+        Start a new question
+      </Button>
+
+      <Typography fontSize={'20px'} >
+        Previous chat
+      </Typography>
+
+      <Stack spacing ={2} sx={{
+        display:'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width:'100%'
+      }}>
+        <CardHome />
+        <CardHome />
+      </Stack>
     </Grid>
+
   );
 }
 
