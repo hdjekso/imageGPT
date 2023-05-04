@@ -14,28 +14,38 @@ function Home_() {
     <Grid sx={{
       display:'flex',
       flexDirection:'column',
-      justifyContent: 'center',
+      backgroundColor:'#99C0FB',
       alignItems: 'center',
-      width:'100%'
+      width:'100vw',
+      height:'100vh'
     }}>
       
       <Button 
         onClick={handleNewQ}
-        variant='outlined'
+        variant='solid'
         sx={{
-          margin:'20px',
+          marginTop:'40px',
           fontSize:'15px',
+          backgroundColor: '#26487A',
+          fontWeight: 'bold',
+          color: 'white',
+          border: '2px solid #26487A',
           '&:hover':{
-            boxShadow:'20px',
-            borderColor: 'primary',
-            backgroundColor: 'none',
+            border: '2px solid #26487A',
+            backgroundColor: 'white',
+            color: '#26487A',
             cursor:'default'
           }
         }}>
         Start a new question
       </Button>
 
-      <Typography fontSize={'20px'} >
+      <Typography 
+        fontSize={'20px'}
+        fontWeight={'bold'}
+        color={'black'}
+        marginBottom={'20px'}
+        marginTop={'40px'}>
         Previous chat
       </Typography>
 

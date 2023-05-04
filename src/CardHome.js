@@ -16,13 +16,16 @@ const CardHome = () => {
             justifyContent:'center',
             alignItems:'center',
             width:'80%',
+            borderRadius:'30px',
             '&:hover': {
                 boxShadow:'20px',
                 borderColor: 'black'
             }
         }}>
             <CardContent>
-            <Typography>
+            <Typography
+             fontSize={'20px'}
+             fontWeight={'550'}>
                 Old Chat
             </Typography>
             </CardContent>
