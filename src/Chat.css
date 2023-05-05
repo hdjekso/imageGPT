@@ -1,0 +1,93 @@
+
+
+:root {
+  --send-bg: #63738d;
+  --send-color: white;
+  --receive-bg: #ffffff;
+  --receive-text: black;
+  --page-background: #e9ecf5;
+  --test:  rgb(212, 43, 43);
+}
+
+
+.receive {
+    color: var(--receive-color); 
+    background: var(--receive-bg);
+    float: left;
+    clear: both;
+    max-width: 90%;
+    word-wrap: break-word;
+    margin-bottom: 12px;
+    line-height: 24px;
+    position: relative;
+    border-radius: 25px;
+    padding-left: 40px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 25px;
+  }
+  
+  .receive im{
+    bottom: 0;
+    position: absolute;
+    right: 0;
+  }
+  /* .receive::before {
+    content: "";
+    position: absolute;
+    left: -7px;
+    width: 20px;
+    height: 25px;
+    background-color: var(--receive-bg);
+    border-bottom-right-radius: 16px 14px;
+  }
+  
+  .receive::after {
+    content: "";
+    position: absolute;
+    left: -26px;
+    width: 26px;
+    height: 25px;
+    background-color: var(--page-background);
+    border-bottom-right-radius: 10px;
+  } */
+  
+  /* Send bubble */
+  .send {
+    color: var(--send-color); 
+    background: var(--send-bg);
+    text-align: right;
+    float: right;
+    clear: both;
+    max-width: 90%;
+    word-wrap: break-word;
+    margin-bottom: 12px;
+    line-height: 24px;
+    position: relative;
+    padding-left: 20px;
+    padding-right: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 25px;
+  }
+  
+  /* .send::before{
+    content: "";
+    position: absolute;
+    right: -7px;
+    width: 20px;
+    height: 25px;
+    background-color: var(--send-bg);
+    border-bottom-left-radius: 16px 14px;
+  }
+  
+  .send::after{
+    content: "";
+    position: absolute;
+    right: -26px;
+    width: 26px;
+    height: 25px;
+    background-color: var(--page-background);
+    border-bottom-left-radius: 10px;
+  }  */

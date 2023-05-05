@@ -18,7 +18,9 @@ import Icon from '@mui/material/Icon';
 import MailIcon from '@mui/icons-material/Mail';
 import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
-
+// import LogoutIcon from '@mui/icons-material/Logout';
+import  Avatar  from '@mui/material/Avatar';
+import "./Chat.css"
 
 
 const drawerWidth = 240;
@@ -153,7 +155,7 @@ function PermanentDrawerLeft() {
       </Drawer>
       <Box
         component="main"
-        height="100vh"
+        height="100%"
         sx={{ flexGrow: 1, bgcolor: '#e9ecf5', p: 3}}
       >
         <Toolbar />
@@ -168,7 +170,19 @@ function PermanentDrawerLeft() {
           {previewImage && <button onClick={handleUploadImage}>Upload</button>}
           </Grid>
         </Grid>
+        
+        <div className="send">
+          sending out
+        </div>
+        <div className="receive">
+          <div className="im">
+            {/* <Avatar>H</Avatar> */}
+          </div>
+          recieve
+        </div>
+        <div className="send">
         <Typography paragraph mt={3}>
+          {/* <Avatar>H</Avatar> */}
           Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
           eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
           neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
@@ -181,6 +195,9 @@ function PermanentDrawerLeft() {
           eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
           posuere sollicitudin aliquam ultrices sagittis orci a.
         </Typography>
+        </div>
+        
+        {/* <Slide>Test</Slide> */}
       </Box>
     </Box>
   );
