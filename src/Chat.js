@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { Button, Card, CardHeader, Grid, TextField, Typography } from "@mui/material";
 import { useNavigate} from "react-router-dom";
-import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -22,7 +23,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 240;
 
-function Chat() {
+/*function Chat() {
   const navigate = useNavigate();
 
   const handleHome = () => {
@@ -47,9 +48,43 @@ function Chat() {
     </Grid>
 
   );
-}
+}*/
 
 function PermanentDrawerLeft() {
+  const [previewImage, setPreviewImage] = useState(null);
+  //const [uploadedImage, setUploadedImage] = useState(null);
+  const [file, setFile] = useState(null);  // stores the image file
+  const [imageUrl, setImageUrl] = useState(null); // stores the link to the image
+
+
+  const handleSelectImage = (event) => {
+    setFile(event.target.files[0]);
+    const fileReader = new FileReader();
+    /*fileReader.addEventListener("load", () => {
+        setPreviewImage(fileReader.result);
+    });*/
+    fileReader.onloadend = () => {
+      setPreviewImage(fileReader.result);
+    }
+    fileReader.readAsDataURL(event.target.files[0]);
+  }
+
+  const handleUploadImage =() => {
+    const link = URL.createObjectURL(file);
+    setImageUrl(link);
+
+    /*const data = new FormData();
+    data.append('files[]', previewImage);
+
+    
+    fetch(/"server url", { method: 'POST', body: data }).then(async (response) => {
+        const imageResponse = await response.json();
+        setUploadedImage(imageResponse);
+    }).catch((err) => {
+
+    });*/
+  }
+
   const navigate = useNavigate();
   const menuItems = [
     {
@@ -82,8 +117,9 @@ function PermanentDrawerLeft() {
           width: drawerWidth,
           flexShrink: 0,
           '& .MuiDrawer-paper': {
-            width: drawerWidth,
+            width: drawerWidth + 10,
             boxSizing: 'border-box',
+            bgcolor: '#d1e0ff',
           },
         }}
         variant="permanent"
@@ -91,7 +127,7 @@ function PermanentDrawerLeft() {
       >
         <AppBar
           position="relative"
-          sx={{ width: drawerWidth, height: 80}}
+          sx={{ width: drawerWidth + 9, height: 80}}
           style={{ background: '#26487A'}}
         >
           <Toolbar>
@@ -117,24 +153,22 @@ function PermanentDrawerLeft() {
       </Drawer>
       <Box
         component="main"
-        sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
+        height="100vh"
+        sx={{ flexGrow: 1, bgcolor: '#e9ecf5', p: 3}}
       >
         <Toolbar />
-        <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
-          enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
-          imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus.
-          Convallis convallis tellus id interdum velit laoreet id donec ultrices.
-          Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-          adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra
-          nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum
-          leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis
-          feugiat vivamus at augue. At augue eget arcu dictum varius duis at
-          consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-          sapien faucibus et molestie ac.
-        </Typography>
-        <Typography paragraph>
+        <Grid container spacing ={2} justifyContent="center" direction="column"  alignItems="center">
+          <Grid item md={12}>
+            {!imageUrl && <input type="file" onChange={handleSelectImage}/>}
+          </Grid>
+          <Grid item>
+            {previewImage && <img style = {{display: "block", minWidth: '40em', maxWidth: '40%', marginLeft: 'auto', marginRight: 'auto'}} src={previewImage} alt="uploaded" />}
+          </Grid>
+          <Grid item>
+          {previewImage && <button onClick={handleUploadImage}>Upload</button>}
+          </Grid>
+        </Grid>
+        <Typography paragraph mt={3}>
           Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
           eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
           neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
