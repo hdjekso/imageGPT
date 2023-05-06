@@ -18,9 +18,10 @@ import Icon from '@mui/material/Icon';
 import MailIcon from '@mui/icons-material/Mail';
 import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
-// import LogoutIcon from '@mui/icons-material/Logout';
 import  Avatar  from '@mui/material/Avatar';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import "./Chat.css"
+import { Cloud } from '@mui/icons-material';
 
 
 const drawerWidth = 240;
@@ -52,12 +53,13 @@ const drawerWidth = 240;
   );
 }*/
 
-function PermanentDrawerLeft() {
+function Chat() {
   const [previewImage, setPreviewImage] = useState(null);
   //const [uploadedImage, setUploadedImage] = useState(null);
   const [file, setFile] = useState(null);  // stores the image file
   const [imageUrl, setImageUrl] = useState(null); // stores the link to the image
-
+  const [imageWidth, setImageWidth] = useState(null);
+  const [uploaded, setUploaded] = useState(0);
 
   const handleSelectImage = (event) => {
     setFile(event.target.files[0]);
@@ -67,12 +69,19 @@ function PermanentDrawerLeft() {
     });*/
     fileReader.onloadend = () => {
       setPreviewImage(fileReader.result);
+      /*setImageWidth(fileReader.result.width);
+      console.log(fileReader.result.width);*/
     }
     fileReader.readAsDataURL(event.target.files[0]);
   }
 
-  const handleUploadImage =() => {
+  const handleRemoveImg = () => {
+    setPreviewImage(null);
+  }
+
+  const handleUploadImage = () => {
     const link = URL.createObjectURL(file);
+    setUploaded(1);
     setImageUrl(link);
 
     /*const data = new FormData();
@@ -155,19 +164,37 @@ function PermanentDrawerLeft() {
       </Drawer>
       <Box
         component="main"
-        height="100%"
+        height="100vh"
         sx={{ flexGrow: 1, bgcolor: '#e9ecf5', p: 3}}
       >
         <Toolbar />
         <Grid container spacing ={2} justifyContent="center" direction="column"  alignItems="center">
-          <Grid item md={12}>
-            {!imageUrl && <input type="file" onChange={handleSelectImage}/>}
-          </Grid>
           <Grid item>
-            {previewImage && <img style = {{display: "block", minWidth: '40em', maxWidth: '40%', marginLeft: 'auto', marginRight: 'auto'}} src={previewImage} alt="uploaded" />}
+          {!previewImage && <Card sx={{
+            backgroundColor: "#4175ce",
+            height: 200,
+            width: '70vw',
+          }}>
+            <Box sx={{display: 'flex', justifyContent: 'center', p: 2, mt: 2}}>
+              <CloudUploadIcon style={{ fontSize: 55 }}/>
+            </Box>
+            <label className="custom-file-select">
+              {!imageUrl && <input type="file" onChange={handleSelectImage}/>}
+              Choose File
+            </label>
+          </Card>}
           </Grid>
+          {previewImage && <Grid item md={4} xs={12} sx={{
+          }}>
+              <Button>Convert to Text</Button>
+          </Grid>}
           <Grid item>
-          {previewImage && <button onClick={handleUploadImage}>Upload</button>}
+            {previewImage && <img className='preview-image' src={previewImage} alt="uploaded" />}
+          </Grid>
+          <Grid item  mb={5}>
+            {previewImage && <Button sx={{marginRight: '12.3vw',}} disabled={uploaded} onClick={handleRemoveImg}>Remove</Button>}
+            {previewImage && !uploaded && <Button sx={{marginLeft: '12.3vw',}} disabled={uploaded} onClick={handleUploadImage}>Upload</Button>}
+            {uploaded ? <Button sx={{marginLeft: '9vw',}} disabled>Upload Complete</Button> : ''}
           </Grid>
         </Grid>
         
@@ -178,7 +205,7 @@ function PermanentDrawerLeft() {
           <div className="im">
             {/* <Avatar>H</Avatar> */}
           </div>
-          recieve
+          receive
         </div>
         <div className="send">
         <Typography paragraph mt={3}>
@@ -203,5 +230,4 @@ function PermanentDrawerLeft() {
   );
 }
 
-//export default Chat;
-export default PermanentDrawerLeft;
+export default Chat;

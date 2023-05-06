@@ -72,6 +72,33 @@
     border-radius: 25px;
   }
   
+  input[type="file"] {
+    display:none;
+  }
+
+  .custom-file-select {
+    color: #4b4b4b; 
+    font-weight: bold;
+    border: 1px solid #ccc;
+    display: flex;
+    margin-left: 40%;
+    margin-right: 40%;
+    padding: 1.3% 4vw;
+    cursor: pointer;
+    border-radius: 10px;
+    background-color: white;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    width: 20%; 
+}
+
+.preview-image {
+  display: "block";
+  width: 30vw;
+  margin-left: 'auto';
+  margin-right: 'auto';
+}
   /* .send::before{
     content: "";
     position: absolute;
