@@ -8,11 +8,11 @@ def create():
     _request = request.json
 
     try: 
-        fname = _request['fname']
-        lname = _request['lname']
-        email = _request['email']
-        username = _request['username']
-        password = _request['password']
+        fname = str(_request['fname'])
+        lname = str(_request['lname'])
+        email = str(_request['email'])
+        username = str(_request['username'])
+        password = str(_request['password'])
 
         users = Users(ID = None, fname = fname, lname = lname, email = email, username = username, password = password, create_date = None, modify_date = None)
 
