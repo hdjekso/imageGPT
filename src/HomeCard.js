@@ -2,7 +2,7 @@
 import {Card, CardContent, Typography} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-const CardHome = () => {
+const HomeCard = () => {
     const navigate = useNavigate();
     const handleOldQ = () =>{
         navigate("/Chat");
@@ -33,4 +33,4 @@ const CardHome = () => {
     );
 }
  
-export default CardHome;
+export default HomeCard;
