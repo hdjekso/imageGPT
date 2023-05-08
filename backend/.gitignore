@@ -1,0 +1,12 @@
+#Virtual Environment
+venv/
+
+#Flask
+instance/*
+!instance/.gitignore
+.webassets-cache
+
+#Flask.Python Stack
+__pycache__/
+*.py[cod]
+*$py.class
