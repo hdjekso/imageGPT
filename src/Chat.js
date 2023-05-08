@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Input from "./Input.js";
 import { Button, Card, CardHeader, Grid, TextField, Typography } from "@mui/material";
 import { useNavigate} from "react-router-dom";
 import { useState } from 'react';
@@ -21,6 +22,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import  Avatar  from '@mui/material/Avatar';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import "./Chat.css"
+import "./Input.css"
 import { Cloud } from '@mui/icons-material';
 
 
@@ -96,6 +98,12 @@ function Chat() {
     });*/
   }
 
+  const [message, setMessage] = useState('');
+
+  const handleMessageChange = (event) => {
+    setMessage(event.target.value);
+  };
+
   const navigate = useNavigate();
   const menuItems = [
     {
@@ -111,7 +119,7 @@ function Chat() {
   ]
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex'}}>
       <CssBaseline />
       {/*<AppBar
         position="fixed"
@@ -165,10 +173,11 @@ function Chat() {
       <Box
         component="main"
         height="100vh"
-        sx={{ flexGrow: 1, bgcolor: '#e9ecf5', p: 3}}
+        sx={{ flexGrow: 1, bgcolor: '#e9ecf5', p: 3, pl: 4.5, pr: 0}}
       >
-        <Toolbar />
-        <Grid container spacing ={2} justifyContent="center" direction="column"  alignItems="center">
+      <div className="content">
+        {/*<Toolbar />*/}
+        <Grid container spacing ={2} sx={{mt: 2}} justifyContent="center" direction="column"  alignItems="center">
           <Grid item>
           {!previewImage && <Card sx={{
             backgroundColor: "#4175ce",
@@ -221,8 +230,160 @@ function Chat() {
           tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
           eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
           posuere sollicitudin aliquam ultrices sagittis orci a.
+          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
+          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
+          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
+          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
+          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
+          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
+          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
+          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
+          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
+          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
+          posuere sollicitudin aliquam ultrices sagittis orci a.
+          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
+          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
+          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
+          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
+          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
+          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
+          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
+          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
+          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
+          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
+          posuere sollicitudin aliquam ultrices sagittis orci a.
+          stique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
+          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
+          posuere sollicitudin aliquam ultrices sagittis orci a.
+          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
+          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
+          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
+          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
+          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
+          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
+          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
+          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
+          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
+          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
+          posuere sollicitudin aliquam ultrices sagittis orci a.
+          a maecenas accumsan lacus vel facilisis. Nulla
+          posuere sollicitudin aliquam ultrices sagittis orci a.
+          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
+          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
+          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
+          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
+          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
+          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
+          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
+          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
+          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
+          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
+          posuere sollicitudin aliquam ultrices sagittis orci a.
+          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
+          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
+          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
+          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
+          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
+          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
+          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
+          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
+          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
+          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
+          posuere sollicitudin aliquam ultrices sagittis orci a.
+          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
+          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
+          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
+          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
+          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
+          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
+          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
+          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
+          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
+          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
+          posuere sollicitudin aliquam ultrices sagittis orci a.
+          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
+          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
+          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
+          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
+          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
+          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
+          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
+          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
+          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
+          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
+          posuere sollicitudin aliquam ultrices sagittis orci a.
+          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
+          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
+          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
+          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
+          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
+          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
+          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
+          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
+          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
+          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
+          posuere sollicitudin aliquam ultrices sagittis orci a.
+          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
+          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
+          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
+          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
+          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
+          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
+          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
+          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
+          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
+          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
+          posuere sollicitudin aliquam ultrices sagittis orci a.
+          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
+          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
+          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
+          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
+          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
+          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
+          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
+          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
+          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
+          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
+          posuere sollicitudin aliquam ultrices sagittis orci a.
+          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
+          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
+          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
+          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
+          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
+          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
+          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
+          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
+          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
+          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
+          posuere sollicitudin aliquam ultrices sagittis orci a.
+          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
+          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
+          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
+          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
+          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
+          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
+          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
+          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
+          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
+          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
+          posuere sollicitudin aliquam ultrices sagittis orci a.
+          
+          
+          
         </Typography>
         </div>
+        {/*<div>
+          <label htmlFor="message-input">Send a message:</label>
+          <input
+            type="text"
+            id="message-input"
+            value={message}
+            onChange={handleMessageChange}
+          />
+          <button>Send</button>
+        </div>*/}
+        <Input/>
+      </div>
         
         {/* <Slide>Test</Slide> */}
       </Box>

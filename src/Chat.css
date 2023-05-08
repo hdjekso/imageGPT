@@ -9,6 +9,22 @@
   --test:  rgb(212, 43, 43);
 }
 
+.content {
+  height: 91vh;
+  overflow-y: auto;
+  padding-right: 10px;
+  padding-right: 30px;
+  width: 100%;
+}
+
+.content::-webkit-scrollbar {
+  width: 0.3em;
+  background-color: transparent;
+}
+.content::-webkit-scrollbar-thumb {
+  background-color: #a3a3a3;
+  border-radius: 0.5em;
+}
 
 .receive {
     color: var(--receive-color); 
@@ -21,7 +37,7 @@
     line-height: 24px;
     position: relative;
     border-radius: 25px;
-    padding-left: 40px;
+    padding-left: 30px;
     padding-right: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -57,7 +73,7 @@
   .send {
     color: var(--send-color); 
     background: var(--send-bg);
-    text-align: right;
+    text-align: left;
     float: right;
     clear: both;
     max-width: 90%;
@@ -66,7 +82,7 @@
     line-height: 24px;
     position: relative;
     padding-left: 20px;
-    padding-right: 40px;
+    padding-right: 30px;
     padding-top: 10px;
     padding-bottom: 10px;
     border-radius: 25px;
@@ -99,6 +115,9 @@
   margin-left: 'auto';
   margin-right: 'auto';
 }
+
+
+
   /* .send::before{
     content: "";
     position: absolute;
