@@ -1,5 +1,6 @@
 # Blueprints.
 from application.apis.users.usersRouter import usersBlueprint
+from application.apis.sessions.sessionsRouter import sessionsBlueprint
 
 # Flask and Flask Cors import.
 from flask import Flask, jsonify, make_response
@@ -13,6 +14,7 @@ CORS(app)
 
 # Register Blueprints.
 app.register_blueprint(usersBlueprint)
+app.register_blueprint(sessionsBlueprint)
 
 @app.route('/', methods=['GET'])
 def index():
