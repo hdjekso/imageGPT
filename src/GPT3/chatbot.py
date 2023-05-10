@@ -15,6 +15,8 @@ response = openai.Completion.create(
     temperature = 0.4,
     max_tokens=64
 )
+
+print(response)
 # openai.ChatCompletion.create(
 #   model="gpt-3.5-turbo",
 #   messages=[
