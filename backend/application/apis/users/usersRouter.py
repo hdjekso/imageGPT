@@ -1,5 +1,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from ...models.users import Users
+from .usersManager import Manager
+
+_manager = Manager()
 
 usersBlueprint = Blueprint("users", __name__, url_prefix="/users")
 
@@ -16,7 +19,7 @@ def create():
 
         users = Users(ID = None, fname = fname, lname = lname, email = email, username = username, password = password, create_date = None, modify_date = None)
 
-        res = users.response()
+        res = _manager.create(users)
     except Exception as e:
         print(e)
         res =  make_response(jsonify({'msg': 'Failed'}), 1) 
