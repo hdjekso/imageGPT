@@ -1,11 +1,11 @@
 
 
 :root {
-  --send-bg: #63738d;
-  --send-color: white;
-  --receive-bg: #ffffff;
-  --receive-text: black;
-  --page-background: #e9ecf5;
+  --send-bg: #ffffff;
+  --send-color: #4B5E7A;
+  --receive-bg: #4B5E7A;
+  --receive-color: #ffffff;
+  --page-background: #213e95;
   --test:  rgb(212, 43, 43);
 }
 
@@ -13,7 +13,7 @@
   height: 91vh;
   overflow-y: auto;
   padding-right: 10px;
-  padding-right: 30px;
+  padding-right: 30 px;
   width: 100%;
 }
 
@@ -32,12 +32,17 @@
     float: left;
     clear: both;
     max-width: 90%;
+
     word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-all;
+    
     margin-bottom: 12px;
     line-height: 24px;
     position: relative;
     border-radius: 25px;
-    padding-left: 30px;
+    padding-left: 20px;
     padding-right: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -77,12 +82,18 @@
     float: right;
     clear: both;
     max-width: 90%;
+
     word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-all;
+
     margin-bottom: 12px;
+
     line-height: 24px;
     position: relative;
     padding-left: 20px;
-    padding-right: 30px;
+    padding-right: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
     border-radius: 25px;
