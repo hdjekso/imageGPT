@@ -28,6 +28,23 @@ const Login = () => {
     var myJSON = JSON.stringify(obj);
     console.log(myJSON);
 
+    fetch('http://127.0.0.1:5001/sessions/create', {
+      method: 'POST',
+      body: myJSON,
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json();
+      }
+      return Promise.reject(response);
+    }).then(function (data) {
+      console.log(data);
+    }).catch(function (error) {
+      console.warn('Something went wrong.', error);
+    });
+
   }
 
   const handleRegister = (e) => {
@@ -44,8 +61,40 @@ const Login = () => {
     var myJSON = JSON.stringify(obj);
     console.log(myJSON);
 
+    fetch('http://127.0.0.1:5001/users/create', {
+      method: 'POST',
+      body: myJSON,
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json();
+      }
+      return Promise.reject(response);
+    }).then(function (data) {
+      console.log(data);
+    }).catch(function (error) {
+      console.warn('Something went wrong.', error);
+    });
+
     switchLoginRegister();
 
+    var obj = {};
+    obj["fname"] = fName;
+    obj["lname"] = lName;
+    obj["email"] = email_;
+    obj["username"] = regUserName;
+    obj["password"] = regPass;
+    var myJSON = JSON.stringify(obj);
+    console.log(myJSON);
+
+    switchLoginRegister();
+
+  }
+
+  const nextPage = () => {
+    navigate("/Home");
   }
 
   const nextPage = () => {

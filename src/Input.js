@@ -8,7 +8,7 @@ const Input = ({handleMessage}) => {
   const [img, setImg] = useState(null);
 
   const handleSend  = (text) => {
-    if (text != "" ){ // nothing if there is nothing to be written
+    if (text !== "" ){ // nothing if there is nothing to be written
       handleMessage(text, "send");
       setText("");
     }

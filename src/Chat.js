@@ -151,7 +151,7 @@ function Chat() {
           '& .MuiDrawer-paper': {
             width: drawerWidth + 10,
             boxSizing: 'border-box',
-            bgcolor: '#d1e0ff',
+            bgcolor: '#e1e8f5',
           },
         }}
         variant="permanent"
