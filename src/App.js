@@ -4,7 +4,6 @@ import Home_ from "./Home.js";
 import Chat from "./Chat.js"
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Sidebar from "./Sidebar.js";
-
 const App = () => {
     return (
       <Router>
