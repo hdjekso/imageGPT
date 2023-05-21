@@ -21,11 +21,11 @@ import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
 import  Avatar  from '@mui/material/Avatar';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import "./Chat.css"
-import "./Input.css"
+import "./Chat.css";
+import "./Input.css";
 import { Cloud } from '@mui/icons-material';
-
-
+import Tesseract from 'tesseract.js';
+import { createWorker } from 'tesseract.js';
 const drawerWidth = 240;
 
 /*function Chat() {
@@ -55,6 +55,9 @@ const drawerWidth = 240;
   );
 }*/
 
+
+
+
 function Chat() {
   const [previewImage, setPreviewImage] = useState(null);
   //const [uploadedImage, setUploadedImage] = useState(null);
@@ -62,7 +65,7 @@ function Chat() {
   const [imageUrl, setImageUrl] = useState(null); // stores the link to the image
   const [imageWidth, setImageWidth] = useState(null);
   const [uploaded, setUploaded] = useState(0);
-
+  
   const handleSelectImage = (event) => {
     setFile(event.target.files[0]);
     const fileReader = new FileReader();
@@ -80,12 +83,10 @@ function Chat() {
   const handleRemoveImg = () => {
     setPreviewImage(null);
   }
-
   const handleUploadImage = () => {
     const link = URL.createObjectURL(file);
     setUploaded(1);
     setImageUrl(link);
-
     /*const data = new FormData();
     data.append('files[]', previewImage);
 
@@ -98,12 +99,24 @@ function Chat() {
     });*/
   }
 
+  //Convert image to text
+  const convertText = () => {
+    (async () => {
+      const worker = await Tesseract.createWorker();
+      await worker.loadLanguage('eng');
+      await worker.initialize('eng');
+      const { data: { text } } = await worker.recognize(file);
+      console.log(text);
+      await worker.terminate();
+  })();
+  }
+
   const [message, setMessage] = useState('');
 
   const handleMessageChange = (event) => {
     setMessage(event.target.value);
   };
-
+  
   const navigate = useNavigate();
   const menuItems = [
     {
@@ -195,7 +208,7 @@ function Chat() {
           </Grid>
           {previewImage && <Grid item md={4} xs={12} sx={{
           }}>
-              <Button>Convert to Text</Button>
+              <Button onClick={convertText}>Convert to Text</Button>
           </Grid>}
           <Grid item>
             {previewImage && <img className='preview-image' src={previewImage} alt="uploaded" />}
