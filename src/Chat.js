@@ -21,9 +21,12 @@ import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
 import  Avatar  from '@mui/material/Avatar';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import "./Chat.css"
-import "./Input.css"
+import "./Chat.css";
+import "./Input.css";
 import { Cloud } from '@mui/icons-material';
+
+import Tesseract from 'tesseract.js';
+import { createWorker } from 'tesseract.js';
 
 
 const drawerWidth = 240;
@@ -63,11 +66,24 @@ function Chat() {
   const [imageWidth, setImageWidth] = useState(null);
   const [uploaded, setUploaded] = useState(0);
 
+  const [imgText, setImgText] = useState(''); // stores text from img
 
   const [messages, setMessages] = useState([
     {content: "Testing the send", type: "send" , id: 1}, 
     
   ]);
+
+  const convertText = () => {
+    (async () => {
+      const worker = await Tesseract.createWorker();
+      await worker.loadLanguage('eng');
+      await worker.initialize('eng');
+      const { data: { text } } = await worker.recognize(file);
+      setImgText(text);
+      console.log(imgText);
+      await worker.terminate();
+  })();
+  }
 
   const handleMessage = (content, type) => {
     const newMessage = {content: content, type: type, id: messages.length +1 }
@@ -208,7 +224,7 @@ function Chat() {
           </Grid>
           {previewImage && <Grid item md={4} xs={12} sx={{
           }}>
-              <Button>Convert to Text</Button>
+              <Button onClick={convertText}>Convert to Text</Button>
           </Grid>}
           <Grid item>
             {previewImage && <img className='preview-image' src={previewImage} alt="uploaded" />}
