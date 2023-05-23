@@ -65,7 +65,7 @@ function Chat() {
   const [imageUrl, setImageUrl] = useState(null); // stores the link to the image
   const [imageWidth, setImageWidth] = useState(null);
   const [uploaded, setUploaded] = useState(0);
-  
+  const [imgText, setImgText] = useState(''); // stores text from img
 
   const [messages, setMessages] = useState([
     {content: "Testing the send", type: "send" , id: 1}, 
@@ -119,7 +119,8 @@ function Chat() {
       await worker.loadLanguage('eng');
       await worker.initialize('eng');
       const { data: { text } } = await worker.recognize(file);
-      console.log(text);
+      setImgText(text);
+      console.log(imgText);
       await worker.terminate();
   })();
   }
