@@ -97,10 +97,6 @@ const Login = () => {
     navigate("/Home");
   }
 
-  const nextPage = () => {
-    navigate("/Home");
-  }
-
   const [showLoginForm, setShowLoginForm] = useState(true);
 
   const switchLoginRegister = () => {
