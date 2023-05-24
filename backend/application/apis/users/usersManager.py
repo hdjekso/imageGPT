@@ -9,7 +9,9 @@ class Manager:
         try:
             db = Database()
             dbQuery = DatabaseQuery()
+            
             dbQuery.createUser(db, users)
+            
             db.close()
 
             res = users.response()
