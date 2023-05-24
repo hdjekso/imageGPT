@@ -2,7 +2,7 @@ import * as React from 'react';
 import Input from "./Input.js";
 import { Button, Card, CardHeader, Grid, TextField, Typography } from "@mui/material";
 import { useNavigate} from "react-router-dom";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -97,18 +97,27 @@ function Chat() {
       await worker.loadLanguage('eng');
       await worker.initialize('eng');
       const { data: { text } } = await worker.recognize(file);
-      console.log(imgText);
-      if (text != " "){
-        setImgText(text);
-        console.log("text processed");
-      } else{
-        console.log("text unable to be processed");
+      setImgText(text);
+      if(imgText != ''){
+        console.log(imgText);
       }
+      
+      // if (text != " "){
+      //   setImgText(text);
+      //   console.log("text processed");
+      // } else{
+      //   console.log("text unable to be processed");
+      // }
       
       await worker.terminate();
   })();
-  }
+  };
 
+  useEffect(()=>{
+    if(file != null && imgText == ''){
+      convertText();
+    }
+  })
   
   
 
