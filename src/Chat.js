@@ -69,9 +69,27 @@ function Chat() {
   const [imgText, setImgText] = useState(''); // stores text from img
 
   const [messages, setMessages] = useState([
-    {content: "Testing the send", type: "send" , id: 1}, 
+    //{content: "Testing the send", type: "send" , id: 1}, 
     
   ]);
+
+  const handleMessage = (content, type) => {
+    const newMessage = {content: content, type: type, id: messages.length}
+    
+    console.log(messages)
+    //updates messages and checks if the previous one is the correct one 
+    if (messages.length > 0){
+      const prevMess = messages[messages.length - 1].type; // makes sure the previous message is an image upload
+      console.log(prevMess);
+      if (prevMess == "imgTxt"){
+        // in the case when the previous message was an image
+        console.log(content + messages[messages.length - 1].content);
+      }
+    }
+
+    const updatedMessages = messages.concat(newMessage);
+    setMessages(updatedMessages);
+  }
 
   const convertText = () => {
     (async () => {
@@ -79,17 +97,19 @@ function Chat() {
       await worker.loadLanguage('eng');
       await worker.initialize('eng');
       const { data: { text } } = await worker.recognize(file);
-      setImgText(text);
       console.log(imgText);
+      if (text != " "){
+        setImgText(text);
+        console.log("text processed");
+      } else{
+        console.log("text unable to be processed");
+      }
+      
       await worker.terminate();
   })();
   }
 
-  const handleMessage = (content, type) => {
-    const newMessage = {content: content, type: type, id: messages.length +1 }
-    const updatedMessages = messages.concat(newMessage);
-    setMessages(updatedMessages);
-  }
+  
   
 
   const handleSelectImage = (event) => {
@@ -115,6 +135,7 @@ function Chat() {
     setUploaded(1);
     setImageUrl(link);
 
+    handleMessage(imgText,"imgTxt")
     /*const data = new FormData();
     data.append('files[]', previewImage);
 
@@ -232,39 +253,24 @@ function Chat() {
           <Grid item  mb={5}>
             {previewImage && <Button sx={{marginRight: '12.3vw',}} disabled={uploaded} onClick={handleRemoveImg}>Remove</Button>}
             {previewImage && !uploaded && <Button sx={{marginLeft: '12.3vw',}} disabled={uploaded} onClick={handleUploadImage}>Upload</Button>}
-            {uploaded ? <Button sx={{marginLeft: '9vw',}} disabled>Upload Complete</Button> : ''}
+            {uploaded ? <Button sx={{marginLeft: '9vw',}} disabled>Upload Complete</Button> : ''} 
           </Grid>
         </Grid>
         
-        <div className="send">
-          sending out
-        </div>
-
-        <div className="receive">
-          <div className="im">
-            {/* <Avatar>H</Avatar> */}
-          </div>
-          receive
-        </div>
+        
 
 
         {messages.map((message) => (
-           message.type === "send" ? (
-            <div className= "send" >
+           (message.type === "send" || message.type === "receive" ) && (
+
+            <div className= {message.type === "send" ? "send" : "receive"} >
               
                 {message.content}
              
               
             </div>
-           ) : (
-            <div className= "receive" >
-             
-                
-                {message.content}
-             
-              
-            </div>
-           )
+            
+          )
             
            
           
