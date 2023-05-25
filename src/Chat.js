@@ -58,13 +58,41 @@ const drawerWidth = 240;
   );
 }*/
 
+//const API_KEY = process.env.CHATGPT_API_KEY;
+const apiKey = 'your_api_key_here';
+const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+/*async function generateChatMessage(user_prompt) {
+  const requestBody = {
+    prompt: user_prompt,
+    max_tokens: 50, // Adjust the value based on your desired response length
+    temperature: 0.7, // Adjust the value to control the randomness of the output
+    model: 'gpt-3.5-turbo',
+  };
+
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${API_KEY}`,
+    },
+    body: JSON.stringify(requestBody),
+  });
+
+  const data = await response.json();
+  console.log(data);
+  //const message = data.choices[0].text.trim();
+  //return message;
+}*/
+
+
 function Chat() {
   const [previewImage, setPreviewImage] = useState(null);
   //const [uploadedImage, setUploadedImage] = useState(null);
   const [file, setFile] = useState(null);  // stores the image file
   const [imageUrl, setImageUrl] = useState(null); // stores the link to the image
   const [imageWidth, setImageWidth] = useState(null);
-  const [uploaded, setUploaded] = useState(0);
+  const [uploaded, setUploaded] = useState(false);
 
   const [imgText, setImgText] = useState(''); // stores text from img
 
@@ -74,14 +102,16 @@ function Chat() {
   ]);
 
   const handleMessage = (content, type) => {
+    setUserInput(content); //updates userinput variable so that it can be referenced by the API
+    gptHandleMessage(); // call the API
     const newMessage = {content: content, type: type, id: messages.length}
     
-    console.log(messages)
+    console.log(content);
     //updates messages and checks if the previous one is the correct one 
     if (messages.length > 0){
       const prevMess = messages[messages.length - 1].type; // makes sure the previous message is an image upload
       console.log(prevMess);
-      if (prevMess == "imgTxt"){
+      if (prevMess === "imgTxt"){
         // in the case when the previous message was an image
         console.log(content + messages[messages.length - 1].content);
       }
@@ -89,6 +119,8 @@ function Chat() {
 
     const updatedMessages = messages.concat(newMessage);
     setMessages(updatedMessages);
+    console.log(updatedMessages);
+    
   }
 
   const convertText = () => {
@@ -98,7 +130,7 @@ function Chat() {
       await worker.initialize('eng');
       const { data: { text } } = await worker.recognize(file);
       console.log(imgText);
-      if (text != " "){
+      if (text !== " "){
         setImgText(text);
         console.log("text processed");
       } else{
@@ -108,8 +140,6 @@ function Chat() {
       await worker.terminate();
   })();
   }
-
-  
   
 
   const handleSelectImage = (event) => {
@@ -131,11 +161,13 @@ function Chat() {
   }
 
   const handleUploadImage = () => {
+
     const link = URL.createObjectURL(file);
-    setUploaded(1);
+    setUploaded(true);
     setImageUrl(link);
 
     handleMessage(imgText,"imgTxt")
+
     /*const data = new FormData();
     data.append('files[]', previewImage);
 
@@ -167,6 +199,50 @@ function Chat() {
       path: '/'
     }
   ]
+
+  //section that allows the chatGPT API to process user input
+  const [userInput, setUserInput] = useState('');
+  //const [chatLog, setChatLog] = useState([]);
+
+  const gptHandleMessage = async () => {
+    //console.log(userInput);
+    if (userInput.trim() === '') return;
+
+    const requestBody = {
+      model: 'gpt-3.5-turbo', 
+      messages: [
+        { role: 'system', content: 'You are' },
+        { role: 'user', content: userInput }
+      ]
+    };
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      const data = await response.json();
+
+      // Retrieve the model's response
+      const reply = data.choices[0].message.content;
+      console.log(reply);
+
+      /*setChatLog((prevChatLog) => [
+        ...prevChatLog,
+        { role: 'assistant', content: reply },
+      ]);
+      console.log(chatLog);*/
+
+      setUserInput('');
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   return (
     <Box sx={{ display: 'flex'}}>
