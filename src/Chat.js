@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Input from "./Input.js";
 import { Button, Card, CardHeader, Grid, TextField, Typography } from "@mui/material";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -19,7 +19,7 @@ import Icon from '@mui/material/Icon';
 import MailIcon from '@mui/icons-material/Mail';
 import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
-import  Avatar  from '@mui/material/Avatar';
+import Avatar from '@mui/material/Avatar';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import "./Chat.css";
 import "./Input.css";
@@ -59,7 +59,7 @@ const drawerWidth = 240;
 }*/
 
 //const API_KEY = process.env.CHATGPT_API_KEY;
-const apiKey = 'your_api_key_here';
+const apiKey = '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';
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
 /*async function generateChatMessage(user_prompt) {
@@ -97,31 +97,74 @@ function Chat() {
   const [imgText, setImgText] = useState(''); // stores text from img
 
   const [messages, setMessages] = useState([
-    //{content: "Testing the send", type: "send" , id: 1}, 
-    
   ]);
 
-  const handleMessage = (content, type) => {
+  const handleMessage = async (content, type) => {
     setUserInput(content); //updates userinput variable so that it can be referenced by the API
-    gptHandleMessage(); // call the API
-    const newMessage = {content: content, type: type, id: messages.length}
-    
+
+    //Call the API and get the response
+    const reply = await gptHandleMessage(content);
+
+    //Create a new message from the API response
+    const apiMessage = { content: reply, type: "receive", id: messages.length + 1 };
+
+    const newMessage = { content: content, type: type, id: messages.length }
+
     console.log(content);
+
+
+
     //updates messages and checks if the previous one is the correct one 
-    if (messages.length > 0){
+    if (messages.length > 0) {
       const prevMess = messages[messages.length - 1].type; // makes sure the previous message is an image upload
       console.log(prevMess);
-      if (prevMess === "imgTxt"){
+      if (prevMess === "imgTxt") {
         // in the case when the previous message was an image
         console.log(content + messages[messages.length - 1].content);
       }
-    }
 
-    const updatedMessages = messages.concat(newMessage);
+    }
+    const updatedMessages = messages.concat([newMessage, apiMessage]); // Add both user message and API message at once
+    // const updatedMessages = messages.concat(newMessage);
     setMessages(updatedMessages);
     console.log(updatedMessages);
-    
+    setUserInput('');
+
   }
+
+  const gptHandleMessage = async (content) => {
+    console.log(content);
+    if (content.trim() === '') return;
+
+    const requestBody = {
+      model: 'gpt-3.5-turbo',
+      messages: [
+        { role: 'system', content: 'You are' },
+        { role: 'user', content: content }
+      ]
+    };
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      const data = await response.json();
+
+      // Retrieve the model's response
+      const reply = data.choices[0].message.content;
+      console.log(reply);
+      return reply;
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   const convertText = () => {
     (async () => {
@@ -130,17 +173,17 @@ function Chat() {
       await worker.initialize('eng');
       const { data: { text } } = await worker.recognize(file);
       console.log(imgText);
-      if (text !== " "){
+      if (text !== " ") {
         setImgText(text);
         console.log("text processed");
-      } else{
+      } else {
         console.log("text unable to be processed");
       }
-      
+
       await worker.terminate();
-  })();
+    })();
   }
-  
+
 
   const handleSelectImage = (event) => {
     setFile(event.target.files[0]);
@@ -166,7 +209,7 @@ function Chat() {
     setUploaded(true);
     setImageUrl(link);
 
-    handleMessage(imgText,"imgTxt")
+    handleMessage(imgText, "imgTxt")
 
     /*const data = new FormData();
     data.append('files[]', previewImage);
@@ -180,17 +223,17 @@ function Chat() {
     });*/
   }
 
-  const [message, setMessage] = useState('');
+  // const [message, setMessage] = useState('');
 
-  const handleMessageChange = (event) => {
-    setMessage(event.target.value);
-  };
+  // const handleMessageChange = (event) => {
+  //   setMessage(event.target.value);
+  // };
 
   const navigate = useNavigate();
   const menuItems = [
     {
       text: 'Home',
-      icon: <HomeIcon color="primary"/>,
+      icon: <HomeIcon color="primary" />,
       path: '/home'
     },
     {
@@ -204,48 +247,9 @@ function Chat() {
   const [userInput, setUserInput] = useState('');
   //const [chatLog, setChatLog] = useState([]);
 
-  const gptHandleMessage = async () => {
-    //console.log(userInput);
-    if (userInput.trim() === '') return;
-
-    const requestBody = {
-      model: 'gpt-3.5-turbo', 
-      messages: [
-        { role: 'system', content: 'You are' },
-        { role: 'user', content: userInput }
-      ]
-    };
-
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify(requestBody)
-      });
-
-      const data = await response.json();
-
-      // Retrieve the model's response
-      const reply = data.choices[0].message.content;
-      console.log(reply);
-
-      /*setChatLog((prevChatLog) => [
-        ...prevChatLog,
-        { role: 'assistant', content: reply },
-      ]);
-      console.log(chatLog);*/
-
-      setUserInput('');
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
 
   return (
-    <Box sx={{ display: 'flex'}}>
+    <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       {/*<AppBar
         position="fixed"
@@ -272,26 +276,26 @@ function Chat() {
       >
         <AppBar
           position="relative"
-          sx={{ width: drawerWidth + 9, height: 80}}
-          style={{ background: '#26487A'}}
+          sx={{ width: drawerWidth + 9, height: 80 }}
+          style={{ background: '#26487A' }}
         >
           <Toolbar>
             <Typography variant="h5" noWrap component="div">
-              <Box sx={{ fontWeight: 'bold', mt: 1.5}}>ImageGPT</Box>
+              <Box sx={{ fontWeight: 'bold', mt: 1.5 }}>ImageGPT</Box>
             </Typography>
           </Toolbar>
-      </AppBar>
+        </AppBar>
 
         {/*output list items */}
         <List>
           {menuItems.map(item => (
             <ListItem button divider
-            key={item.text}
-            sx={{height: 60, p: 3, mb: 1.5}}
-            onClick={() => navigate(item.path)}
+              key={item.text}
+              sx={{ height: 60, p: 3, mb: 1.5 }}
+              onClick={() => navigate(item.path)}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text}/> 
+              <ListItemText primary={item.text} />
             </ListItem>
           ))}
         </List>
@@ -299,62 +303,62 @@ function Chat() {
       <Box
         component="main"
         height="100vh"
-        sx={{ flexGrow: 1, bgcolor: '#99C0FB', p: 3, pl: 4.5, pr: 0}}
+        sx={{ flexGrow: 1, bgcolor: '#99C0FB', p: 3, pl: 4.5, pr: 0 }}
       >
-      <div className="content">
-        {/*<Toolbar />*/}
-        <Grid container spacing ={2} sx={{mt: 2}} justifyContent="center" direction="column"  alignItems="center">
-          <Grid item>
-          {!previewImage && <Card sx={{
-            backgroundColor: "#26487A",
-            height: 200,
-            width: '70vw',
-          }}>
-            <Box sx={{display: 'flex', justifyContent: 'center', p: 2, mt: 2}}>
-              <CloudUploadIcon style={{ fontSize: 55 }}/>
-            </Box>
-            <label className="custom-file-select">
-              {!imageUrl && <input type="file" onChange={handleSelectImage}/>}
-              Choose File
-            </label>
-          </Card>}
-          </Grid>
-          {previewImage && <Grid item md={4} xs={12} sx={{
-          }}>
+        <div className="content">
+          {/*<Toolbar />*/}
+          <Grid container spacing={2} sx={{ mt: 2 }} justifyContent="center" direction="column" alignItems="center">
+            <Grid item>
+              {!previewImage && <Card sx={{
+                backgroundColor: "#26487A",
+                height: 200,
+                width: '70vw',
+              }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', p: 2, mt: 2 }}>
+                  <CloudUploadIcon style={{ fontSize: 55 }} />
+                </Box>
+                <label className="custom-file-select">
+                  {!imageUrl && <input type="file" onChange={handleSelectImage} />}
+                  Choose File
+                </label>
+              </Card>}
+            </Grid>
+            {previewImage && <Grid item md={4} xs={12} sx={{
+            }}>
               <Button onClick={convertText}>Convert to Text</Button>
-          </Grid>}
-          <Grid item>
-            {previewImage && <img className='preview-image' src={previewImage} alt="uploaded" />}
+            </Grid>}
+            <Grid item>
+              {previewImage && <img className='preview-image' src={previewImage} alt="uploaded" />}
+            </Grid>
+            <Grid item mb={5}>
+              {previewImage && <Button sx={{ marginRight: '12.3vw', }} disabled={uploaded} onClick={handleRemoveImg}>Remove</Button>}
+              {previewImage && !uploaded && <Button sx={{ marginLeft: '12.3vw', }} disabled={uploaded} onClick={handleUploadImage}>Upload</Button>}
+              {uploaded ? <Button sx={{ marginLeft: '9vw', }} disabled>Upload Complete</Button> : ''}
+            </Grid>
           </Grid>
-          <Grid item  mb={5}>
-            {previewImage && <Button sx={{marginRight: '12.3vw',}} disabled={uploaded} onClick={handleRemoveImg}>Remove</Button>}
-            {previewImage && !uploaded && <Button sx={{marginLeft: '12.3vw',}} disabled={uploaded} onClick={handleUploadImage}>Upload</Button>}
-            {uploaded ? <Button sx={{marginLeft: '9vw',}} disabled>Upload Complete</Button> : ''} 
-          </Grid>
-        </Grid>
-        
-        
 
 
-        {messages.map((message) => (
-           (message.type === "send" || message.type === "receive" ) && (
 
-            <div className= {message.type === "send" ? "send" : "receive"} >
-              
+
+          {messages.map((message) => (
+            (message.type === "send" || message.type === "receive") && (
+
+              <div className={message.type === "send" ? "send" : "receive"} >
+
                 {message.content}
-             
-              
-            </div>
-            
-          )
-            
-           
-          
-           
 
-        ))}
-        
-        {/*<div>
+
+              </div>
+
+            )
+
+
+
+
+
+          ))}
+
+          {/*<div>
           <label htmlFor="message-input">Send a message:</label>
           <input
             type="text"
@@ -364,9 +368,9 @@ function Chat() {
           />
           <button>Send</button>
         </div>*/}
-        <Input handleMessage={handleMessage}/>
-      </div>
-        
+          <Input handleMessage={handleMessage} />
+        </div>
+
         {/* <Slide>Test</Slide> */}
       </Box>
     </Box>
