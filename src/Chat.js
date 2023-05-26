@@ -72,7 +72,6 @@ function Chat() {
     //{content: "Testing the send", type: "send" , id: 1}, 
     
   ]);
-
   const handleMessage = (content, type) => {
     const newMessage = {content: content, type: type, id: messages.length}
     
@@ -80,14 +79,13 @@ function Chat() {
     //updates messages and checks if the previous one is the correct one 
     if (messages.length > 0){
       const prevMess = messages[messages.length - 1].type; // makes sure the previous message is an image upload
-      console.log(prevMess);
       if (prevMess == "imgTxt"){
         // in the case when the previous message was an image
-        console.log(content + messages[messages.length - 1].content);
+        console.log("This is what a message to chat gpt would look like " + content + " " +  messages[messages.length - 1].content);
       }
     }
 
-    const updatedMessages = messages.concat(newMessage);
+    const updatedMessages = [...messages, newMessage];
     setMessages(updatedMessages);
   }
 
