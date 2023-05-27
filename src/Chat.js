@@ -27,8 +27,6 @@ import { Cloud } from '@mui/icons-material';
 import Tesseract from 'tesseract.js';
 import { createWorker } from 'tesseract.js';
 
-const apiKey = process.env.REACT_APP_GPT3_API_KEY;
-
 const drawerWidth = 240;
 
 const apiKey = process.env.REACT_APP_GPT3_API_KEY;;
@@ -71,6 +69,7 @@ function Chat() {
         // in the case when the previous message was an image
         console.log("This is what a message to chat gpt would look like " + content + " " +  messages[messages.length - 1].content);
       }
+    }
 
     const updatedMessages = [...messages, newMessage];
     //const updatedMessages = messages.concat([newMessage, apiMessage]); // Add both user message and API message at once
