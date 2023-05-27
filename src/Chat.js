@@ -24,68 +24,16 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import "./Chat.css";
 import "./Input.css";
 import { Cloud } from '@mui/icons-material';
-
 import Tesseract from 'tesseract.js';
 import { createWorker } from 'tesseract.js';
 
+const apiKey = process.env.REACT_APP_GPT3_API_KEY;
 
 const drawerWidth = 240;
 
-/*function Chat() {
-  const navigate = useNavigate();
-
-  const handleHome = () => {
-    navigate("/home");
-  }
-
-  const handleSignOut = () => {
-    navigate("/");
-  }
-
-  return (
-    <Grid>
-      <Typography>
-        This is the conversations page
-      </Typography>
-    <Button onClick={handleHome}>
-      Home
-    </Button>
-    <Button onClick={handleSignOut}>
-      Sign Out
-    </Button>
-    </Grid>
-
-  );
-}*/
-
-//const API_KEY = process.env.CHATGPT_API_KEY;
 const apiKey = process.env.REACT_APP_GPT3_API_KEY;;
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
 console.log(localStorage.getItem("token"));
-
-/*async function generateChatMessage(user_prompt) {
-  const requestBody = {
-    prompt: user_prompt,
-    max_tokens: 50, // Adjust the value based on your desired response length
-    temperature: 0.7, // Adjust the value to control the randomness of the output
-    model: 'gpt-3.5-turbo',
-  };
-
-  const response = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${API_KEY}`,
-    },
-    body: JSON.stringify(requestBody),
-  });
-
-  const data = await response.json();
-  console.log(data);
-  //const message = data.choices[0].text.trim();
-  //return message;
-}*/
-
 
 function Chat() {
   const [previewImage, setPreviewImage] = useState(null);
