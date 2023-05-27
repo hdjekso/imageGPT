@@ -59,8 +59,9 @@ const drawerWidth = 240;
 }*/
 
 //const API_KEY = process.env.CHATGPT_API_KEY;
-const apiKey = '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';
+const apiKey = process.env.REACT_APP_GPT3_API_KEY;;
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
+console.log(localStorage.getItem("token"));
 
 /*async function generateChatMessage(user_prompt) {
   const requestBody = {

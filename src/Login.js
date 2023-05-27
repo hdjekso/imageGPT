@@ -41,6 +41,8 @@ const Login = () => {
       return Promise.reject(response);
     }).then(function (data) {
       console.log(data);
+      localStorage.setItem("token", data.token);
+      console.log(data.token);
     }).catch(function (error) {
       console.warn('Something went wrong.', error);
     });
