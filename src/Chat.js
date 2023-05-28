@@ -31,7 +31,8 @@ const drawerWidth = 240;
 
 const apiKey = process.env.REACT_APP_GPT3_API_KEY;
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
-console.log(localStorage.getItem("token"));
+const token = localStorage.getItem("token");
+//console.log(localStorage.getItem("token"));
 
 function Chat() {
   const [previewImage, setPreviewImage] = useState(null);
@@ -41,16 +42,16 @@ function Chat() {
   const [imageWidth, setImageWidth] = useState(null);
   const [uploaded, setUploaded] = useState(false);
 
-  const [imgText, setImgText] = useState(''); // stores text from img
+  const [imgText, setImgText] = useState('hi this is the image text'); // stores text from img
 
   const [messages, setMessages] = useState([
   ]);
 
   const handleMessage = async (content, type) => {
-    setUserInput(content); //updates userinput variable so that it can be referenced by the API
+    //setUserInput(content); //updates userinput variable so that it can be referenced by the API
 
     //Call the API and get the response
-    const reply = await gptHandleMessage(content);
+    const reply = '';
 
     //Create a new message from the API response
     const apiMessage = { content: reply, type: "receive", id: messages.length + 1 };
@@ -67,8 +68,39 @@ function Chat() {
       console.log(prevMess);
       if (prevMess === "imgTxt") {
         // in the case when the previous message was an image
-        console.log("This is what a message to chat gpt would look like " + content + " " +  messages[messages.length - 1].content);
+        console.log("This is what a message to chat gpt would look like if the prev. msg was an image" + messages[messages.length - 1].content + " " + content); 
+        reply = await gptHandleMessage(messages[messages.length - 1].content + "\n" + content); // passes imgtxt concat. with user input to API
+      }else{
+        reply = await gptHandleMessage(content); //passes only user input to the API
       }
+    }else{ //if this is the first msg
+      reply = await gptHandleMessage(content); //passes only user input to the API
+    }
+
+    //pass user input & token in json format to db IF it is the first input provided OR if it is the second input provided (1st is image)
+    if (messages.length === 0 || (messages.length === 1 && messages[0].type === "imgTxt"){
+      var obj = {};
+      obj["token"] = token;
+      obj["message"] = ;
+      var myJSON = JSON.stringify(obj);
+      console.log(myJSON);
+  
+      fetch('http://127.0.0.1:5000/messages/create', {
+        method: 'POST',
+        body: myJSON,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8' 
+        }
+      }).then(function (response) {
+        if (response.ok) {
+          return response.json(); 
+        }
+        return Promise.reject(response);
+      }).then(function (data) {
+        console.log(data);
+      }).catch(function (error) {
+        console.warn('Something went wrong.', error);
+      });
     }
 
     const updatedMessages = [...messages, newMessage];
@@ -121,9 +153,10 @@ function Chat() {
       await worker.loadLanguage('eng');
       await worker.initialize('eng');
       const { data: { text } } = await worker.recognize(file);
-      console.log(imgText);
       if (text !== " ") {
-        setImgText(text);
+        setImgText(text); //imgText is not being set properly
+        console.log(text);
+        console.log(imgText);
         console.log("text processed");
       } else {
         console.log("text unable to be processed");
