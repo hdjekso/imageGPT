@@ -29,7 +29,7 @@ import { createWorker } from 'tesseract.js';
 
 const drawerWidth = 240;
 
-const apiKey = process.env.REACT_APP_GPT3_API_KEY;;
+const apiKey = process.env.REACT_APP_GPT3_API_KEY;
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
 console.log(localStorage.getItem("token"));
 
@@ -158,7 +158,7 @@ function Chat() {
     setUploaded(true);
     setImageUrl(link);
 
-    handleMessage(imgText, "imgTxt")
+    handleMessage(imgText, "imgTxt");
 
     /*const data = new FormData();
     data.append('files[]', previewImage);

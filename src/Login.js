@@ -28,7 +28,7 @@ const Login = () => {
     var myJSON = JSON.stringify(obj);
     console.log(myJSON);
 
-    fetch('http://127.0.0.1:5001/sessions/create', {
+    fetch('http://127.0.0.1:5000/sessions/create', {
       method: 'POST',
       body: myJSON,
       headers: {
@@ -63,7 +63,7 @@ const Login = () => {
     var myJSON = JSON.stringify(obj);
     console.log(myJSON);
 
-    fetch('http://127.0.0.1:5001/users/create', {
+    fetch('http://127.0.0.1:5000/users/create', {
       method: 'POST',
       body: myJSON,
       headers: {
