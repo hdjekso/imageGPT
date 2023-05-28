@@ -316,10 +316,9 @@ function Chat() {
             onChange={handleMessageChange}
           />
           <button>Send</button>
-        </div>*/}
-          <Input handleMessage={handleMessage} />
+          </div>*/}
         </div>
-
+        <Input handleMessage={handleMessage} />
         {/* <Slide>Test</Slide> */}
       </Box>
     </Box>

@@ -1,6 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
-import "./Input.css"
+import {Button, Grid, TextField} from "@mui/material";
+import IconButton from '@mui/material/IconButton';
+import SendIcon from '@mui/icons-material/Send';
+import "./Input.css";
 
 
 const Input = ({handleMessage}) => {
@@ -15,8 +18,53 @@ const Input = ({handleMessage}) => {
    
   };
 
+  const inputStyle = {
+    borderRadius: '15px', // Adjust the value as needed
+    backgroundColor: '#ffffff',
+  };
+
   return (
-    <div className="message-input">
+    <Grid 
+      container
+      alignItems="flex-end"
+      justifyContent="center"
+      direction="row">
+      <Grid item md={10} 
+        sx={{
+          ml: 4.5
+        }}>
+        <div 
+          style={{
+            alignItems:'center',
+            display:'flex',
+          }}>
+          <TextField 
+            InputProps={{
+              style: inputStyle,
+            }}
+            fullWidth
+            variant="outlined" 
+            label="Send a message..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) =>{
+              if (e.keyCode === 13  ){              
+                handleSend(text);
+              }
+            }}
+          >
+          </TextField>
+          <IconButton 
+            color="primary"
+            aria-label="send message"
+            onClick={() => handleSend(text)}>
+            <SendIcon sx={{ fontSize: 45 }}/>
+          </IconButton>
+        </div>
+      </Grid>
+    </Grid>
+  );
+  {/*<div className="message-input">
       <input
         type="text"
         placeholder="Send a message..."
@@ -34,8 +82,7 @@ const Input = ({handleMessage}) => {
       <div className="send_">
         <button onClick={() => handleSend(text)}></button>
       </div>
-    </div>
-  );
+    </div>*/}
 }
 
 export default Input;
