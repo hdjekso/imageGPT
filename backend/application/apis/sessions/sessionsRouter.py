@@ -27,7 +27,18 @@ def create():
         
     return res
 
-#def validate():
-    #_request = request.json
+@sessionsBlueprint.route('/authenticate', methods=['POST'])
+def authenticate():
+    _request = request.json
 
-    #try:
+    try: 
+        token = str(_request['token'])
+
+        sessions = Sessions(ID = None, fk_user_ID = None, token = token, create_date = None, modify_date = None)
+
+        res = _manager.authenticate(sessions)
+    except Exception as e:
+        print(e)
+        res =  make_response(jsonify({'msg': 'Failed'}), 1) 
+
+    return res
