@@ -12,6 +12,7 @@ List your current libraries in your virtual environment. Should be none.
 
 ### pip install flask
 ### pip install flask-cors
+### pip install mysql-connector
 
 Get flask app started.
 
@@ -35,38 +36,14 @@ http://127.0.0.1:5001/users/create
   "password": "webs12345"
 }
 
-### Response 
+### Url
+
+http://127.0.0.1:5000/messages/create
+
+### JSON Body
+
 {
-  "ID": null,
-  "create_date": null,
-  "email": "pp@ucdavis.edu",
-  "fname": "Peter",
-  "lname": "Parker",
-  "modify_date": null,
-  "password": "webs12345",
-  "username": "Spiderman"
+  "token": "7ee36376-f9c2-11ed-af15-ec2e9898d84a",
+  "image_txt": "Math function a b c",
+  "users_inp": "Solve this equation"
 }
-
-### API Request
-let headersList = {
- "Accept": "*/*",
- "User-Agent": "Thunder Client (https://www.thunderclient.com)",
- "Content-Type": "application/json"
-}
-
-let bodyContent = JSON.stringify({
-  "fname": "Peter",
-  "lname": "Parker",
-  "email": "pp@ucdavis.edu",
-  "username": "Spiderman",
-  "password": "webs12345"
-});
-
-let response = await fetch("http://127.0.0.1:5001/users/create", { 
-  method: "POST",
-  body: bodyContent,
-  headers: headersList
-});
-
-let data = await response.text();
-console.log(data);
