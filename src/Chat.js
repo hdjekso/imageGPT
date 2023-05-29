@@ -39,7 +39,6 @@ function Chat() {
   //const [uploadedImage, setUploadedImage] = useState(null);
   const [file, setFile] = useState(null);  // stores the image file
   const [imageUrl, setImageUrl] = useState(null); // stores the link to the image
-  const [imageWidth, setImageWidth] = useState(null);
   const [uploaded, setUploaded] = useState(false);
 
   const [imgText, setImgText] = useState('good morning'); // stores text from img
