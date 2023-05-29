@@ -42,18 +42,79 @@ function Chat() {
   const [uploaded, setUploaded] = useState(false);
 
   const [imgText, setImgText] = useState('good morning'); // stores text from img
+  let conversation = [{ role: 'system', content: 'You are a helpful assistant.' }];
 
-  const [messages, setMessages] = useState([{ role: 'system', content: 'You are a helpful assistant.' }]);
+  const [messages, setMessages] = useState([]);
 
-  const handleMessage = async (content_, type) => {
+  const handleMessage = async (content_, type_) => {
+
+    //pass user input & token in json format to db IF it is the first input provided OR if it is the second input provided (1st is image)
+    if (messages.length === 0){
+      var obj = {};
+      obj["token"] = token;
+      obj["image_txt"] = "";
+      obj["users_inp"] = content_;
+      var myJSON = JSON.stringify(obj);
+      console.log(myJSON);
+  
+      fetch('http://127.0.0.1:5000/messages/create', {
+        method: 'POST',
+        body: myJSON,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8' 
+        }
+      }).then(function (response) {
+        if (response.ok) {
+          return response.json(); 
+        }
+        return Promise.reject(response);
+      }).then(function (data) {
+        console.log(data);
+      }).catch(function (error) {
+        console.warn('Something went wrong.', error);
+      });
+    }else if (messages.length === 1 && messages[0].type === "imgTxt"){
+      var obj = {};
+      obj["token"] = token;
+      obj["image_txt"] = messages[0].content;
+      obj["users_inp"] = content_;
+      var myJSON = JSON.stringify(obj);
+      console.log(myJSON);
+  
+      fetch('http://127.0.0.1:5000/messages/create', {
+        method: 'POST',
+        body: myJSON,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8' 
+        }
+      }).then(function (response) {
+        if (response.ok) {
+          return response.json(); 
+        }
+        return Promise.reject(response);
+      }).then(function (data) {
+        console.log(data);
+      }).catch(function (error) {
+        console.warn('Something went wrong.', error);
+      });
+    }
+
+    //to be passed into the API
     console.log(content_);
-    let conversation = messages;
     conversation.push({role: 'user', content: content_});
     const reply = await gptHandleMessage(conversation);
     //console.log('Assistant:', reply);
     conversation.push({role: 'assistant', content: reply});
-    
-    //old function
+
+    //used to map out user/ API messages later
+    const newUserMessage = { content: content_, type: type_, id: messages.length };
+    const newAPIMessage = { content: reply, type: "receive", id: messages.length };
+    setMessages([...messages, newUserMessage, newAPIMessage]);
+
+
+  }
+
+  //old function
     /*const handleMessage = async (content, type) => {
     //setUserInput(content); //updates userinput variable so that it can be referenced by the API
 
@@ -144,60 +205,6 @@ function Chat() {
     setUserInput('');
 
   }*/
-
-
-    //pass user input & token in json format to db IF it is the first input provided OR if it is the second input provided (1st is image)
-    if (messages.length === 0){
-      var obj = {};
-      obj["token"] = token;
-      obj["image_txt"] = "";
-      obj["users_inp"] = content_;
-      var myJSON = JSON.stringify(obj);
-      console.log(myJSON);
-  
-      fetch('http://127.0.0.1:5000/messages/create', {
-        method: 'POST',
-        body: myJSON,
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8' 
-        }
-      }).then(function (response) {
-        if (response.ok) {
-          return response.json(); 
-        }
-        return Promise.reject(response);
-      }).then(function (data) {
-        console.log(data);
-      }).catch(function (error) {
-        console.warn('Something went wrong.', error);
-      });
-    }else if (messages.length === 1 && messages[0].type === "imgTxt"){
-      var obj = {};
-      obj["token"] = token;
-      obj["image_txt"] = messages[0].content;
-      obj["users_inp"] = content_;
-      var myJSON = JSON.stringify(obj);
-      console.log(myJSON);
-  
-      fetch('http://127.0.0.1:5000/messages/create', {
-        method: 'POST',
-        body: myJSON,
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8' 
-        }
-      }).then(function (response) {
-        if (response.ok) {
-          return response.json(); 
-        }
-        return Promise.reject(response);
-      }).then(function (data) {
-        console.log(data);
-      }).catch(function (error) {
-        console.warn('Something went wrong.', error);
-      });
-    }
-
-  }
 
   const gptHandleMessage = async (conversation) => {
     console.log("CONVERSATION LOG:", conversation);
