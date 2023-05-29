@@ -47,3 +47,14 @@ http://127.0.0.1:5000/messages/create
   "image_txt": "Math function a b c",
   "users_inp": "Solve this equation"
 }
+
+### Url
+
+http://127.0.0.1:5000/sessions/authenticate
+
+### JSON Body
+
+{
+  "token": "7ee36376-f9c2-11ed-af15-ec2e9898d84a"
+}
+
