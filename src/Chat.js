@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Input from "./Input.js";
 import { Button, Card, CardHeader, Grid, TextField, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useState } from 'react';
+import { useNavigate} from "react-router-dom";
+import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -34,8 +34,6 @@ var token = localStorage.getItem("token");
 //console.log(localStorage.getItem("token"));
 
 
-
-
 function Chat() {
   const [previewImage, setPreviewImage] = useState(null);
   //const [uploadedImage, setUploadedImage] = useState(null);
@@ -43,7 +41,7 @@ function Chat() {
   const [imageUrl, setImageUrl] = useState(null); // stores the link to the image
   const [uploaded, setUploaded] = useState(false);
 
-  const [imgText, setImgText] = useState('good morning'); // stores text from img
+  const [imgText, setImgText] = useState(''); // stores text from img
   let conversation = [{ role: 'system', content: 'You are a helpful assistant.' }];
 
   const [messages, setMessages] = useState([]);
@@ -277,8 +275,15 @@ function Chat() {
       console.log(imgText);
       await worker.terminate();
   })();
-  }
+  };
 
+  useEffect(()=>{
+    if(file != null){
+      convertText();
+    }
+  })
+  
+  
 
   const handleSelectImage = (event) => {
     setFile(event.target.files[0]);
@@ -298,7 +303,7 @@ function Chat() {
     setPreviewImage(null);
   }
   const handleUploadImage = () => {
-
+    convertText();
     const link = URL.createObjectURL(file);
     setUploaded(true);
     setImageUrl(link);
@@ -345,7 +350,7 @@ function Chat() {
           '& .MuiDrawer-paper': {
             width: drawerWidth + 10,
             boxSizing: 'border-box',
-            bgcolor: '#d1e0ff',
+            bgcolor: '#e1e8f5',
           },
         }}
         variant="permanent"
@@ -400,10 +405,10 @@ function Chat() {
                 </label>
               </Card>}
             </Grid>
-            {previewImage && <Grid item md={4} xs={12} sx={{
+            {/*{previewImage && <Grid item md={4} xs={12} sx={{
             }}>
               <Button onClick={convertText}>Convert to Text</Button>
-            </Grid>}
+            </Grid>}*/}
             <Grid item>
               {previewImage && <img className='preview-image' src={previewImage} alt="uploaded" />}
             </Grid>

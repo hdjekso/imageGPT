@@ -13,7 +13,9 @@ const Login = () => {
   const [email_, setEmail_] = useState('');
   const [regUserName, setRegUserName] = useState('');
   const [regPass, setRegPass] = useState('');
+  const [userAuth, setUserAuth] = useState(false); // determines whether the user has been authenticated on Sign In
   //const [regPassValid, setRegPassValid] = useState('');
+  const [token, setToken] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -43,6 +45,7 @@ const Login = () => {
       console.log(data);
       localStorage.setItem("token", data.token);
       console.log(data.token);
+      setToken(data.token);
     }).catch(function (error) {
       console.warn('Something went wrong.', error);
     });
@@ -54,13 +57,13 @@ const Login = () => {
     const form_ = e.target;
     const formData = new FormData(form_);
 
-    var obj = {};
+    let obj = {};
     obj["fname"] = fName;
     obj["lname"] = lName;
     obj["email"] = email_;
     obj["username"] = regUserName;
     obj["password"] = regPass;
-    var myJSON = JSON.stringify(obj);
+    let myJSON = JSON.stringify(obj);
     console.log(myJSON);
 
     fetch('http://127.0.0.1:5000/users/create', {
@@ -81,18 +84,52 @@ const Login = () => {
     });
 
     switchLoginRegister();
+  }
 
-    var obj = {};
-    obj["fname"] = fName;
-    obj["lname"] = lName;
-    obj["email"] = email_;
-    obj["username"] = regUserName;
-    obj["password"] = regPass;
-    var myJSON = JSON.stringify(obj);
-    console.log(myJSON);
+  const attemptSignIn = () => {
+    let obj = {}
+    obj["token"] = token;
+    let myJSON = JSON.stringify(obj);
 
-    switchLoginRegister();
+    fetch('http://127.0.0.1:5000/sessions/authenticate', {
+      method: 'POST',
+      body: myJSON,
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    }).then(function (response) {
+      if (response.ok) {
+        return { data: response.json(), status: response.status };
+      }
+      return Promise.reject(response);
+    }).then(function (result) {
+      console.log(result.data);
+      if (result.status === 200){
+        nextPage();
+      }else{
+        console.log("credentials invalid");
+      }
+      
+    }).catch(function (error) {
+      console.warn('Something went wrong.', error);
+    });
 
+        /*fetch('http://127.0.0.1:5000/sessions/authenticate', {
+      method: 'POST',
+      body: myJSON,
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json();
+      }
+      return Promise.reject(response);
+    }).then(function (data) {
+      console.log(data);
+    }).catch(function (error) {
+      console.warn('Something went wrong!!', error);
+    });*/
   }
 
   const nextPage = () => {
@@ -118,7 +155,7 @@ const Login = () => {
               onChange={(event) => {setUsername(event.target.value)}}/>
             <input className="LogPass" type="password" placeholder="Password" value={Password}
               onChange={(event) => {setPassword(event.target.value)}}/>
-            <button className="LoginButton" type="submit">Sign In</button>
+            <button className="LoginButton" type="submit" onClick={attemptSignIn}>Sign In</button>
             <button onClick={nextPage}> Skip to next page</button>
             <div onClick={switchLoginRegister} className="message">Not Registered? <a href="#">Create a new account!</a></div>
           </form>
