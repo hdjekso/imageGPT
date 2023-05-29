@@ -42,12 +42,20 @@ function Chat() {
   const [imageWidth, setImageWidth] = useState(null);
   const [uploaded, setUploaded] = useState(false);
 
-  const [imgText, setImgText] = useState('hi this is the image text'); // stores text from img
+  const [imgText, setImgText] = useState('good morning'); // stores text from img
 
-  const [messages, setMessages] = useState([
-  ]);
+  const [messages, setMessages] = useState([{ role: 'system', content: 'You are a helpful assistant.' }]);
 
-  const handleMessage = async (content, type) => {
+  const handleMessage = async (content_, type) => {
+    console.log(content_);
+    let conversation = messages;
+    conversation.push({role: 'user', content: content_});
+    const reply = await gptHandleMessage(conversation);
+    //console.log('Assistant:', reply);
+    conversation.push({role: 'assistant', content: reply});
+    
+    //old function
+    /*const handleMessage = async (content, type) => {
     //setUserInput(content); //updates userinput variable so that it can be referenced by the API
 
     //Call the API and get the response
@@ -80,9 +88,9 @@ function Chat() {
     //pass user input & token in json format to db IF it is the first input provided OR if it is the second input provided (1st is image)
     if (messages.length === 0){
       var obj = {};
-      obj["token_"] = token;
-      obj["message"] = content;
-      obj["imgtxt"] = "";
+      obj["token"] = token;
+      obj["image_txt"] = "";
+      obj["users_inp"] = content;
       var myJSON = JSON.stringify(obj);
       console.log(myJSON);
   
@@ -136,18 +144,69 @@ function Chat() {
     console.log(updatedMessages);
     setUserInput('');
 
+  }*/
+
+
+    //pass user input & token in json format to db IF it is the first input provided OR if it is the second input provided (1st is image)
+    if (messages.length === 0){
+      var obj = {};
+      obj["token"] = token;
+      obj["image_txt"] = "";
+      obj["users_inp"] = content_;
+      var myJSON = JSON.stringify(obj);
+      console.log(myJSON);
+  
+      fetch('http://127.0.0.1:5000/messages/create', {
+        method: 'POST',
+        body: myJSON,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8' 
+        }
+      }).then(function (response) {
+        if (response.ok) {
+          return response.json(); 
+        }
+        return Promise.reject(response);
+      }).then(function (data) {
+        console.log(data);
+      }).catch(function (error) {
+        console.warn('Something went wrong.', error);
+      });
+    }else if (messages.length === 1 && messages[0].type === "imgTxt"){
+      var obj = {};
+      obj["token"] = token;
+      obj["image_txt"] = messages[0].content;
+      obj["users_inp"] = content_;
+      var myJSON = JSON.stringify(obj);
+      console.log(myJSON);
+  
+      fetch('http://127.0.0.1:5000/messages/create', {
+        method: 'POST',
+        body: myJSON,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8' 
+        }
+      }).then(function (response) {
+        if (response.ok) {
+          return response.json(); 
+        }
+        return Promise.reject(response);
+      }).then(function (data) {
+        console.log(data);
+      }).catch(function (error) {
+        console.warn('Something went wrong.', error);
+      });
+    }
+
   }
 
-  const gptHandleMessage = async (content) => {
-    console.log(content);
-    if (content.trim() === '') return;
+  const gptHandleMessage = async (conversation) => {
+    console.log("CONVERSATION LOG:", conversation);
+    //if (content.trim() === '') return;
 
     const requestBody = {
       model: 'gpt-3.5-turbo',
-      messages: [
-        { role: 'system', content: 'You are' },
-        { role: 'user', content: content }
-      ]
+      messages: conversation,
     };
 
     try {
@@ -258,16 +317,6 @@ function Chat() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      {/*<AppBar
-        position="fixed"
-        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
-      >
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div">
-            ImageGPT
-          </Typography>
-        </Toolbar>
-      </AppBar>*/}
       <Drawer
         sx={{
           width: drawerWidth,
@@ -364,20 +413,8 @@ function Chat() {
 
 
           ))}
-
-          {/*<div>
-          <label htmlFor="message-input">Send a message:</label>
-          <input
-            type="text"
-            id="message-input"
-            value={message}
-            onChange={handleMessageChange}
-          />
-          <button>Send</button>
-          </div>*/}
         </div>
         <Input handleMessage={handleMessage} />
-        {/* <Slide>Test</Slide> */}
       </Box>
     </Box>
   );
