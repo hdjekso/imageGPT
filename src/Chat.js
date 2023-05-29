@@ -418,9 +418,9 @@ function Chat() {
 
 
           {messages.map((message) => (
-            (message.type === "send" || message.type === "receive") && (
+            (message.type === "send" || message.type === "receive" || message.type === "imgTxt") && (
 
-              <div className={message.type === "send" ? "send" : "receive"} >
+              <div className={(message.type === "send" || message.type === "imgTxt")? "send" : "receive"} >
 
                 {message.content}
 
