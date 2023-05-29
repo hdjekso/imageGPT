@@ -23,4 +23,22 @@ class Manager:
             res =  make_response(jsonify({'msg': str(e)}), 1) 
 
         return res
+
+    def authenticate(self, sessions):
+        try:
+            db = Database()
+            dbQuery = DatabaseQuery()
+
+            print(dbQuery.authenticateSession(db, sessions))
+
+            if not dbQuery.authenticateSession(db, sessions) : 
+                res =  make_response(jsonify({'err': "Session is Invalid!"}), 5)  
+            else : 
+                res = sessions.response()
+
+            db.close()
+        except MySQL.Error as e:
+            res =  make_response(jsonify({'msg': str(e)}), 1) 
+
+        return res
     

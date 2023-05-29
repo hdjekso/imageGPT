@@ -31,3 +31,13 @@ class DatabaseQuery:
         args = [messages.get_fk_user_ID(), messages.get_image_txt(), messages.get_users_inp()]
         db.execute(query, args)
         db.commit()
+
+    def authenticateSession(self, db, sessions):
+        query = "SELECT EXISTS(SELECT `token` FROM `sessions` WHERE token = %s)"
+        args = [sessions.get_token()]
+        ret = db.fetchone(query, args)
+
+        if ret[0] == 1: 
+            return True
+            
+        return False
