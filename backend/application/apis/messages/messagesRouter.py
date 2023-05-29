@@ -13,10 +13,11 @@ def create():
 
     try: 
         token = str(_request['token'])
-        message = str(_request['message'])
+        image_txt = str(_request['image_txt'])
+        users_inp = str(_request['users_inp'])
 
         sessions = Sessions(ID = None, fk_user_ID = None, token = token, create_date = None, modify_date = None)
-        messages = Messages(ID = None, fk_user_ID = None, message = message, create_date = None, modify_date = None)
+        messages = Messages(ID = None, fk_user_ID = None, image_txt = image_txt, users_inp = users_inp, create_date = None, modify_date = None)
 
         res = _manager.create(sessions, messages)
     except Exception as e:

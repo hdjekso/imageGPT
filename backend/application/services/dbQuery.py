@@ -27,7 +27,7 @@ class DatabaseQuery:
         return ret[0]
 
     def createMessage(self, db, messages):
-        query = "INSERT INTO `messages`(`fk_user_ID`, `message`) VALUES (%s, %s)"
-        args = [messages.get_fk_user_ID(), messages.get_message()]
+        query = "INSERT INTO `messages`(`fk_user_ID`, `image_txt`, `users_inp`) VALUES (%s, %s, %s)"
+        args = [messages.get_fk_user_ID(), messages.get_image_txt(), messages.get_users_inp()]
         db.execute(query, args)
         db.commit()
