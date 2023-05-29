@@ -104,9 +104,9 @@ function Chat() {
       });
     }else if (messages.length === 1 && messages[0].type === "imgTxt"){
       var obj = {};
-      obj["token_"] = token;
-      obj["message"] = content;
-      obj["imgtxt"] = messages[0].content;
+      obj["token"] = token;
+      obj["image_txt"] = messages[0].content;
+      obj["users_inp"] = content;
       var myJSON = JSON.stringify(obj);
       console.log(myJSON);
   
