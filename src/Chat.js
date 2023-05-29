@@ -48,8 +48,10 @@ function Chat() {
 
   const [messages, setMessages] = useState([]);
 
-  const handleMessage = async (content_, type_) => {
+  const [generating, setGenerating] = useState(false); // set the state of the API: whether it is generating a response or not
 
+  const handleMessage = async (content_, type_) => {
+    setGenerating(true);
     //pass user input & token in json format to db IF it is the first input provided OR if it is the second input provided (1st is image)
     if (messages.length === 0){
       var obj = {};
@@ -104,7 +106,9 @@ function Chat() {
     //to be passed into the API
     console.log(content_);
     conversation.push({role: 'user', content: content_});
+    //setGenerating('true');
     const reply = await gptHandleMessage(conversation);
+    //setGenerating('false');
     //console.log('Assistant:', reply);
     conversation.push({role: 'assistant', content: reply});
 
@@ -112,6 +116,8 @@ function Chat() {
     const newUserMessage = { content: content_, type: type_};
     const newAPIMessage = { content: reply, type: "receive"};
     setMessages([...messages, newUserMessage, newAPIMessage]);
+
+    setGenerating(false);
 
 
   }
@@ -209,6 +215,7 @@ function Chat() {
   }*/
 
   const gptHandleMessage = async (conversation) => {
+    //setGenerating('true');
     console.log("CONVERSATION LOG:", conversation);
     //if (content.trim() === '') return;
 
@@ -237,6 +244,7 @@ function Chat() {
     } catch (error) {
       console.error('Error:', error);
     }
+    //setGenerating('false');
   };
 
   /*const convertText = () => {
@@ -427,7 +435,7 @@ function Chat() {
 
           ))}
         </div>
-        <Input handleMessage={handleMessage} />
+        <Input handleMessage={handleMessage} isDisabled={generating}/>
       </Box>
     </Box>
   );
