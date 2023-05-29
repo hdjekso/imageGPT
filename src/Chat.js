@@ -26,13 +26,15 @@ import "./Input.css";
 import { Cloud } from '@mui/icons-material';
 import Tesseract from 'tesseract.js';
 import { createWorker } from 'tesseract.js';
-
 const drawerWidth = 240;
 
 const apiKey = process.env.REACT_APP_GPT3_API_KEY;
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
 var token = localStorage.getItem("token");
 //console.log(localStorage.getItem("token"));
+
+
+
 
 function Chat() {
   const [previewImage, setPreviewImage] = useState(null);
@@ -107,8 +109,8 @@ function Chat() {
     conversation.push({role: 'assistant', content: reply});
 
     //used to map out user/ API messages later
-    const newUserMessage = { content: content_, type: type_, id: messages.length };
-    const newAPIMessage = { content: reply, type: "receive", id: messages.length };
+    const newUserMessage = { content: content_, type: type_};
+    const newAPIMessage = { content: reply, type: "receive"};
     setMessages([...messages, newUserMessage, newAPIMessage]);
 
 
@@ -237,7 +239,7 @@ function Chat() {
     }
   };
 
-  const convertText = () => {
+  /*const convertText = () => {
     (async () => {
       const worker = await Tesseract.createWorker();
       await worker.loadLanguage('eng');
@@ -254,6 +256,19 @@ function Chat() {
 
       await worker.terminate();
     })();
+  }*/
+
+  //Convert image to text (from convert_text branch)
+  const convertText = () => {
+    (async () => {
+      const worker = await Tesseract.createWorker();
+      await worker.loadLanguage('eng');
+      await worker.initialize('eng');
+      const { data: { text } } = await worker.recognize(file);
+      setImgText(text);
+      console.log(imgText);
+      await worker.terminate();
+  })();
   }
 
 
@@ -274,13 +289,11 @@ function Chat() {
   const handleRemoveImg = () => {
     setPreviewImage(null);
   }
-
   const handleUploadImage = () => {
 
     const link = URL.createObjectURL(file);
     setUploaded(true);
     setImageUrl(link);
-
     handleMessage(imgText, "imgTxt");
 
     /*const data = new FormData();
@@ -294,13 +307,7 @@ function Chat() {
 
     });*/
   }
-
-  // const [message, setMessage] = useState('');
-
-  // const handleMessageChange = (event) => {
-  //   setMessage(event.target.value);
-  // };
-
+  
   const navigate = useNavigate();
   const menuItems = [
     {
@@ -330,7 +337,7 @@ function Chat() {
           '& .MuiDrawer-paper': {
             width: drawerWidth + 10,
             boxSizing: 'border-box',
-            bgcolor: '#e1e8f5',
+            bgcolor: '#d1e0ff',
           },
         }}
         variant="permanent"
