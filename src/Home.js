@@ -15,18 +15,15 @@ function Home_() {
   }
 
   const fetchData = async () => {
-    try {
+    /*try {
       const body = JSON.stringify({ token });
       const local_token = token;
-      const apiURL = 'http://127.0.0.1:5000/messages/retrieve/all';
-      const urlWithToken = apiURL + "/" + local_token;
-      console.log(urlWithToken);
+      const apiURL = 'https://dummy.restapiexample.com/api/v1/employees';
+      //const urlWithToken = apiURL + "/" + local_token;
+      //console.log(urlWithToken);
 
-      const response = await fetch(urlWithToken, {
+      const response = await fetch(apiURL, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
       });
 
       if (response.ok) {
@@ -39,32 +36,20 @@ function Home_() {
     } catch (error) {
       // Handle network error
       console.error('Request failed:', error);
-    }
+    }*/
+    const apiURL = 'http://127.0.0.1:5000/messages/retrieve/all/';
+    const local_token = token;
+    fetch(`http://127.0.0.1:5000/messages/retrieve/all/${local_token}`)
+      .then(response => response.json())
+      .then(data => {
+        // Process the retrieved data
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error occurred while fetching data:', error);
+      });
   };
   
-  /*const fetchData = async () => {
-    let obj = {};
-    obj["token"] = token;
-    let myJSON = JSON.stringify(obj);
-
-    fetch('http://127.0.0.1:5000/messages/retrieve/all', {
-      method: 'GET',
-      body: myJSON,
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8'
-      }
-    }).then(function (response) {
-      if (response.ok) {
-        return response.json();
-      }
-      return Promise.reject(response);
-    }).then(function (data) {
-      console.log(data);
-    }).catch(function (error) {
-      console.warn('Something went wrong.', error);
-    });
-  }*/
-
   useEffect(() => {
     console.log("localstorage token: " + token);
     fetchData();

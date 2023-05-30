@@ -13,6 +13,11 @@ app = Flask(__name__)
 # Cross Origin. Supports transfer of data from different servers(localhosts).
 CORS(app)
 
+# CORS for blueprint
+CORS(usersBlueprint, resources={r"/*": {"origins": "*"}})
+CORS(sessionsBlueprint, resources={r"/*": {"origins": "*"}})
+CORS(messagesBlueprint, resources={r"/*": {"origins": "*"}})
+
 # Register Blueprints.
 app.register_blueprint(usersBlueprint)
 app.register_blueprint(sessionsBlueprint)
