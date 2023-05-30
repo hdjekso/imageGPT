@@ -13,6 +13,7 @@ class Database:
             database = 'moonlight',
             port = '3306'
         )
+        # Tuple by default.
         self._cursor = self._mysqldb.cursor()
 
     # Execute. 

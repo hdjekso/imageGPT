@@ -45,5 +45,14 @@ class DatabaseQuery:
     def retrieveAllMessages(self, db, messages):
         query = "SELECT image_txt, users_inp FROM messages WHERE fk_user_ID = %s"
         args = [messages.get_fk_user_ID()]
-        ret = db.fetchall(query, args)
+        tmp = db.fetchall(query, args)
+        
+        ret = []
+
+        for row in tmp:
+            resp = {}
+            resp["image_txt"] = str(row[0])
+            resp["users_inp"] = str(row[1])
+            ret.append(resp)
+
         return ret

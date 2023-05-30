@@ -34,7 +34,7 @@ class Manager:
             sessions.set_fk_user_ID(int(fk_user_ID))
 
             res = dbQuery.retrieveAllMessages(db, messages)
-            print(res)
+            res = make_response(jsonify(res))
 
             db.close()
         except MySQL.Error as e:
