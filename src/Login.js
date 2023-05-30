@@ -1,6 +1,6 @@
 import { Button, Card, CardHeader, Grid, TextField, Typography, grid2Classes } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Login.css"
 
 const Login = () => {
@@ -18,6 +18,12 @@ const Login = () => {
   const [userAuth, setUserAuth] = useState(false); // determines whether the user has been authenticated on Sign In
   //const [regPassValid, setRegPassValid] = useState('');
   const [token, setToken] = useState('');
+
+  useEffect(() => {
+    console.log("Token updated: " + token);
+    localStorage.setItem("token", token);
+    console.log(localStorage.getItem("token"));
+  }, [token]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,6 +52,8 @@ const Login = () => {
     }).then(function (data) {
       console.log(data);
       localStorage.setItem("token", data.token);
+      console.log("data token: " + data.token);
+      console.log("local storage token: " + localStorage.getItem("token"));
       setToken(data.token);
       attemptSignIn(obj, data.token); // sign in verification, pass in "data" to prevent empty username/ pw
     }).catch(function (error) {
@@ -96,6 +104,8 @@ const Login = () => {
     let signObj = {}
     signObj["token"] = token_;
     console.log("Attempt sign in token: " + token_);
+    setToken(token_);
+    console.log("useState token: " + token);
     let signJSON = JSON.stringify(signObj);
 
     fetch('http://127.0.0.1:5000/sessions/authenticate', {
