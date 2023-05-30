@@ -1,9 +1,12 @@
 import React from 'react';
 import { useState } from 'react';
-import "./Input.css"
+import {Button, Grid, TextField} from "@mui/material";
+import IconButton from '@mui/material/IconButton';
+import SendIcon from '@mui/icons-material/Send';
+import "./Input.css";
 
 
-const Input = ({handleMessage}) => {
+const Input = ({handleMessage, isDisabled}) => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
 
@@ -15,26 +18,53 @@ const Input = ({handleMessage}) => {
    
   };
 
-  return (
-    <div className="message-input">
-      <input
-        type="text"
-        placeholder="Send a message..."
-        onChange={(e) => setText(e.target.value)}
-        value={text}
-        onKeyDown={(e) =>{
-          if (e.keyCode === 13  ){
-            
-            handleSend(text);
-          }
-        }
+  const inputStyle = {
+    borderRadius: '15px', // Adjust the value as needed
+    backgroundColor: '#ffffff',
+  };
 
-        }
-      />
-      <div className="send_">
-        <button onClick={() => handleSend(text)}></button>
-      </div>
-    </div>
+  return (
+    <Grid 
+      container
+      alignItems="flex-end"
+      justifyContent="center"
+      direction="row">
+      <Grid item md={10} 
+        sx={{
+          ml: 4.5
+        }}>
+        <div 
+          style={{
+            alignItems:'center',
+            display:'flex',
+          }}>
+          <TextField 
+            InputProps={{
+              style: inputStyle,
+            }}
+            fullWidth
+            disabled={isDisabled} //disabled if API is generating response
+            variant="outlined" 
+            label={isDisabled ? 'Generating response...' : 'Send a message...'}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) =>{
+              if (e.keyCode === 13  ){              
+                handleSend(text);
+              }
+            }}
+          >
+          </TextField>
+          <IconButton 
+            color="primary"
+            aria-label="send message"
+            disabled={isDisabled} //disabled if API is generating response
+            onClick={() => handleSend(text)}>
+            <SendIcon sx={{ fontSize: 45 }}/>
+          </IconButton>
+        </div>
+      </Grid>
+    </Grid>
   );
 }
 
