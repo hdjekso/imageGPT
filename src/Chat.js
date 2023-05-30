@@ -31,6 +31,7 @@ const drawerWidth = 240;
 const apiKey = process.env.REACT_APP_GPT3_API_KEY;
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
 var token = localStorage.getItem("token");
+let conversation = [{ role: 'system', content: 'You are a helpful assistant.' }];
 //console.log(localStorage.getItem("token"));
 
 
@@ -42,7 +43,6 @@ function Chat() {
   const [uploaded, setUploaded] = useState(false);
 
   const [imgText, setImgText] = useState(''); // stores text from img
-  let conversation = [{ role: 'system', content: 'You are a helpful assistant.' }];
 
   const [messages, setMessages] = useState([]);
 
