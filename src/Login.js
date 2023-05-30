@@ -45,10 +45,9 @@ const Login = () => {
       return Promise.reject(response);
     }).then(function (data) {
       console.log(data);
-      attemptSignIn(obj); // sign in verification, pass in "data" to prevent empty username/ pw
       localStorage.setItem("token", data.token);
-      console.log(data.token);
       setToken(data.token);
+      attemptSignIn(obj, data.token); // sign in verification, pass in "data" to prevent empty username/ pw
     }).catch(function (error) {
       setLoginFailed(true);
       console.warn('Something went wrong?????', error);
@@ -92,15 +91,16 @@ const Login = () => {
     });
   }
 
-  const attemptSignIn = (userInfo) => {
-    console.log("attemptSignIn argument: " + userInfo["username"]);
+  const attemptSignIn = (userInfo, token_) => {
+    setToken(token_);
     let signObj = {}
-    signObj["token"] = token;
-    let myJSON = JSON.stringify(signObj);
+    signObj["token"] = token_;
+    console.log("Attempt sign in token: " + token_);
+    let signJSON = JSON.stringify(signObj);
 
     fetch('http://127.0.0.1:5000/sessions/authenticate', {
       method: 'POST',
-      body: myJSON,
+      body: signJSON,
       headers: {
         'Content-type': 'application/json; charset=UTF-8'
       }
