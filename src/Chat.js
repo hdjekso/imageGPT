@@ -101,9 +101,6 @@ function Chat() {
       await worker.initialize('eng');
       const { data: { text } } = await worker.recognize(file);
       setImgText(text);
-      if(imgText != ''){
-        console.log(imgText);
-      }
       
       // if (text != " "){
       //   setImgText(text);
@@ -117,7 +114,7 @@ function Chat() {
   };
 
   useEffect(()=>{
-    if(file != null){
+    if( (file != null) ){
       convertText();
     }
   })
@@ -140,7 +137,11 @@ function Chat() {
 
   const handleRemoveImg = () => {
     setPreviewImage(null);
+    setImageUrl(null);
+    setFile(null);
+    setUploaded(0);
   }
+
   const handleUploadImage = () => {
     convertText();
     const link = URL.createObjectURL(file);
@@ -251,7 +252,7 @@ function Chat() {
               <CloudUploadIcon style={{ fontSize: 55 }}/>
             </Box>
             <label className="custom-file-select">
-              {!imageUrl && <input type="file" onChange={handleSelectImage}/>}
+              {!file && !imageUrl && <input type="file" onChange={handleSelectImage}/>}
               Choose File
             </label>
           </Card>}
@@ -264,9 +265,9 @@ function Chat() {
             {previewImage && <img className='preview-image' src={previewImage} alt="uploaded" />}
           </Grid>
           <Grid item  mb={5}>
-            {previewImage && <Button sx={{marginRight: '12.3vw',}} disabled={uploaded} onClick={handleRemoveImg}>Remove</Button>}
-            {previewImage && !uploaded && <Button sx={{marginLeft: '12.3vw',}} disabled={uploaded} onClick={handleUploadImage}>Upload</Button>}
-            {uploaded ? <Button sx={{marginLeft: '9vw',}} disabled>Upload Complete</Button> : ''} 
+            {previewImage && <Button sx={{marginRight: '12.3vw',}} onClick={handleRemoveImg}>Remove</Button>}
+            {previewImage &&  <Button sx={{marginLeft: '12.3vw',}} onClick={handleUploadImage}>Upload</Button>}
+            {/* {uploaded ? <Button sx={{marginLeft: '9vw',}} disabled>Upload Complete</Button> : ''}  */}
           </Grid>
         </Grid>
         
