@@ -29,7 +29,8 @@ class Database:
         self._mysqldb.commit()
 
     # Fetches.
-    def fetchall(self):
+    def fetchall(self, query, args):
+        self._cursor.execute(query, (args))
         records = self._cursor.fetchall()
         return records
     

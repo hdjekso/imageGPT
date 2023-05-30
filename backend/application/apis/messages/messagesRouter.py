@@ -26,7 +26,18 @@ def create():
         
     return res
 
-#def validate():
-    #_request = request.json
+@messagesBlueprint.route('/retrieve/all', methods=['GET'])
+def retrieveAll():
+    _request = request.json
+    
+    try: 
+        token = str(_request['token'])
 
-    #try:
+        sessions = Sessions(ID = None, fk_user_ID = None, token = token, create_date = None, modify_date = None)
+        messages = Messages(ID = None, fk_user_ID = None, image_txt = None, users_inp = None, create_date = None, modify_date = None)
+        res = _manager.retrieveAll(sessions, messages)
+    except Exception as e:
+        print(e)
+        res =  make_response(jsonify({'msg': 'Failed'}), 1) 
+        
+    return res

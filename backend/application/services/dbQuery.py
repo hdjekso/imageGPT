@@ -41,3 +41,9 @@ class DatabaseQuery:
             return True
             
         return False
+
+    def retrieveAllMessages(self, db, messages):
+        query = "SELECT image_txt, users_inp FROM messages WHERE fk_user_ID = %s"
+        args = [messages.get_fk_user_ID()]
+        ret = db.fetchall(query, args)
+        return ret
