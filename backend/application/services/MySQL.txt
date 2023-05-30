@@ -42,3 +42,16 @@ CREATE TABLE `sessions` (
   KEY `user_message` (`fk_user_ID`),
   CONSTRAINT `user_message` FOREIGN KEY (`fk_user_ID`) REFERENCES `users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1'
+
+'CREATE TABLE `inputs` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `is_active` int(11) NOT NULL DEFAULT ''1'',
+  `fk_user_ID` int(11) NOT NULL,
+  `image_txt` varchar(255) NOT NULL DEFAULT '''',
+  `users_inp` varchar(255) NOT NULL DEFAULT '''',
+  `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modify_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ID`),
+  KEY `user_message` (`fk_user_ID`),
+  CONSTRAINT `user_message` FOREIGN KEY (`fk_user_ID`) REFERENCES `users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1'

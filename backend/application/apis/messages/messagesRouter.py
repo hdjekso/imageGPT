@@ -26,12 +26,11 @@ def create():
         
     return res
 
-@messagesBlueprint.route('/retrieve/all', methods=['GET'])
-def retrieveAll():
-    _request = request.json
+@messagesBlueprint.route('/retrieve/all/<token>', methods=['GET'])
+def retrieveAll(token):
     
     try: 
-        token = str(_request['token'])
+        token = str(token)
 
         sessions = Sessions(ID = None, fk_user_ID = None, token = token, create_date = None, modify_date = None)
         messages = Messages(ID = None, fk_user_ID = None, image_txt = None, users_inp = None, create_date = None, modify_date = None)
