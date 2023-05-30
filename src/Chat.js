@@ -52,11 +52,11 @@ function Chat() {
     setGenerating(true);
     //pass user input & token in json format to db IF it is the first input provided OR if it is the second input provided (1st is image)
     if (messages.length === 0){
-      var obj = {};
+      let obj = {};
       obj["token"] = token;
       obj["image_txt"] = "";
       obj["users_inp"] = content_;
-      var myJSON = JSON.stringify(obj);
+      let myJSON = JSON.stringify(obj);
       console.log(myJSON);
   
       fetch('http://127.0.0.1:5000/messages/create', {
@@ -76,11 +76,11 @@ function Chat() {
         console.warn('Something went wrong.', error);
       });
     }else if (messages.length === 1 && messages[0].type === "imgTxt"){
-      var obj = {};
+      let obj = {};
       obj["token"] = token;
       obj["image_txt"] = messages[0].content;
       obj["users_inp"] = content_;
-      var myJSON = JSON.stringify(obj);
+      let myJSON = JSON.stringify(obj);
       console.log(myJSON);
   
       fetch('http://127.0.0.1:5000/messages/create', {
