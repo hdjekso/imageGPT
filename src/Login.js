@@ -26,10 +26,10 @@ const Login = () => {
     console.log(Username);
     console.log(Password);
 
-    var obj = {};
+    let obj = {};
     obj["username"] = Username;
     obj["password"] = Password;
-    var myJSON = JSON.stringify(obj);
+    let myJSON = JSON.stringify(obj);
     console.log(myJSON);
 
     fetch('http://127.0.0.1:5000/sessions/create', {
@@ -45,12 +45,13 @@ const Login = () => {
       return Promise.reject(response);
     }).then(function (data) {
       console.log(data);
+      attemptSignIn(obj); // sign in verification, pass in "data" to prevent empty username/ pw
       localStorage.setItem("token", data.token);
       console.log(data.token);
       setToken(data.token);
     }).catch(function (error) {
       setLoginFailed(true);
-      console.warn('Something went wrong.', error);
+      console.warn('Something went wrong?????', error);
     });
 
   }
@@ -89,14 +90,13 @@ const Login = () => {
       console.log("Registration failed", regFailed);
       console.warn('Something went wrong.', error);
     });
-
-
   }
 
-  const attemptSignIn = () => {
-    let obj = {}
-    obj["token"] = token;
-    let myJSON = JSON.stringify(obj);
+  const attemptSignIn = (userInfo) => {
+    console.log("attemptSignIn argument: " + userInfo["username"]);
+    let signObj = {}
+    signObj["token"] = token;
+    let myJSON = JSON.stringify(signObj);
 
     fetch('http://127.0.0.1:5000/sessions/authenticate', {
       method: 'POST',
@@ -111,7 +111,7 @@ const Login = () => {
       return Promise.reject(response);
     }).then(function (result) {
       console.log(result.data);
-      if (result.status === 200) {
+      if (result.status === 200 && userInfo["username"] !== '' && userInfo["password"] !== '') {
         setLoginFailed(false);
         nextPage();
       } else {
