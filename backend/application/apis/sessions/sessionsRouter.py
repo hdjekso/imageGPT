@@ -2,6 +2,9 @@ from flask import Blueprint, request, jsonify, make_response
 from ...models.sessions import Sessions
 from ...models.users import Users
 import uuid
+from .sessionsManager import Manager
+
+_manager = Manager()
 
 sessionsBlueprint = Blueprint("sessions", __name__, url_prefix="/sessions")
 
@@ -14,12 +17,28 @@ def create():
         password = str(_request['password'])
         token = str(uuid.uuid1())
 
-        sessions = Sessions(ID = None, fk_user_ID = None, token = token, create_date = None, modify_date = None, expire_date = None)
+        sessions = Sessions(ID = None, fk_user_ID = None, token = token, create_date = None, modify_date = None)
         users = Users(ID = None, fname = None, lname = None, email = None, username = username, password = password, create_date = None, modify_date = None)
 
-        res = sessions.response()
+        res = _manager.create(sessions, users)
     except Exception as e:
         print(e)
         res =  make_response(jsonify({'msg': 'Failed'}), 1) 
         
+    return res
+
+@sessionsBlueprint.route('/authenticate', methods=['POST'])
+def authenticate():
+    _request = request.json
+
+    try: 
+        token = str(_request['token'])
+
+        sessions = Sessions(ID = None, fk_user_ID = None, token = token, create_date = None, modify_date = None)
+
+        res = _manager.authenticate(sessions)
+    except Exception as e:
+        print(e)
+        res =  make_response(jsonify({'msg': 'Failed'}), 1) 
+
     return res
