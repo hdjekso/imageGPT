@@ -24,7 +24,7 @@ Assuming port 5000 is being used for front end. The localhost for backend will r
 
 ### Url
 
-http://127.0.0.1:5001/users/create
+POST: http://127.0.0.1:5001/users/create
 
 ### JSON Body
 
@@ -38,7 +38,7 @@ http://127.0.0.1:5001/users/create
 
 ### Url
 
-http://127.0.0.1:5000/messages/create
+POST: <http://127.0.0.1:5000/messages/create>
 
 ### JSON Body
 
@@ -50,7 +50,7 @@ http://127.0.0.1:5000/messages/create
 
 ### Url
 
-http://127.0.0.1:5000/sessions/authenticate
+POST: <http://127.0.0.1:5000/sessions/authenticate>
 
 ### JSON Body
 
@@ -58,3 +58,12 @@ http://127.0.0.1:5000/sessions/authenticate
   "token": "7ee36376-f9c2-11ed-af15-ec2e9898d84a"
 }
 
+### Url
+
+GET: <http://127.0.0.1:5000/messages/retrieve/all>
+
+### JSON Body
+
+{
+  "token": "7ee36376-f9c2-11ed-af15-ec2e9898d84a"
+}
