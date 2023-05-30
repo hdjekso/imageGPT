@@ -245,25 +245,6 @@ function Chat() {
     //setGenerating('false');
   };
 
-  /*const convertText = () => {
-    (async () => {
-      const worker = await Tesseract.createWorker();
-      await worker.loadLanguage('eng');
-      await worker.initialize('eng');
-      const { data: { text } } = await worker.recognize(file);
-      if (text !== " ") {
-        setImgText(text); //imgText is not being set properly
-        console.log(text);
-        console.log(imgText);
-        console.log("text processed");
-      } else {
-        console.log("text unable to be processed");
-      }
-
-      await worker.terminate();
-    })();
-  }*/
-
   //Convert image to text (from convert_text branch)
   const convertText = () => {
     (async () => {
@@ -272,13 +253,20 @@ function Chat() {
       await worker.initialize('eng');
       const { data: { text } } = await worker.recognize(file);
       setImgText(text);
-      console.log(imgText);
+      
+      // if (text != " "){
+      //   setImgText(text);
+      //   console.log("text processed");
+      // } else{
+      //   console.log("text unable to be processed");
+      // }
+      
       await worker.terminate();
   })();
   };
 
   useEffect(()=>{
-    if(file != null){
+    if( (file != null) ){
       convertText();
     }
   })
@@ -301,7 +289,11 @@ function Chat() {
 
   const handleRemoveImg = () => {
     setPreviewImage(null);
+    setImageUrl(null);
+    setFile(null);
+    setUploaded(0);
   }
+
   const handleUploadImage = () => {
     convertText();
     const link = URL.createObjectURL(file);
@@ -413,8 +405,8 @@ function Chat() {
               {previewImage && <img className='preview-image' src={previewImage} alt="uploaded" />}
             </Grid>
             <Grid item mb={5}>
-              {previewImage && <Button sx={{ marginRight: '12.3vw', }} disabled={uploaded} onClick={handleRemoveImg}>Remove</Button>}
-              {previewImage && !uploaded && <Button sx={{ marginLeft: '12.3vw', }} disabled={uploaded} onClick={handleUploadImage}>Upload</Button>}
+              {previewImage && <Button sx={{ marginRight: '12.3vw', }}  onClick={handleRemoveImg}>Remove</Button>}
+              {previewImage && !uploaded && <Button sx={{ marginLeft: '12.3vw', }}  onClick={handleUploadImage}>Upload</Button>}
               {uploaded ? <Button sx={{ marginLeft: '9vw', }} disabled>Upload Complete</Button> : ''}
             </Grid>
           </Grid>
