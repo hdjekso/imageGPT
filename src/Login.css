@@ -90,18 +90,35 @@
     }
 }
 
-.form button.failed {
+.RegButton.failed {
     animation: horizontal-shaking 0.3s ease-in-out 0s 2;
     color: orangered;
 }
 
-.form p{
+.RegFailedMSG {
     display: none;
 }
-.form p.failed{
+
+.RegFailedMSG.failed {
     display: block;
     color: orangered;
 }
+
+.LoginButton.failed {
+    animation: horizontal-shaking 0.3s ease-in-out 0s 2;
+    color: orangered;
+}
+
+.LoginFailedMSG {
+    display: none;
+}
+
+.LoginFailedMSG.failed {
+    display: block;
+    color: orangered;
+}
+
+
 
 .form button:hover,
 .form button:active,

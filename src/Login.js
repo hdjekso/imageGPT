@@ -14,6 +14,7 @@ const Login = () => {
   const [regUserName, setRegUserName] = useState('');
   const [regPass, setRegPass] = useState('');
   const [regFailed, setRegFailed] = useState(false);
+  const [loginFailed, setLoginFailed] = useState(false);
   const [userAuth, setUserAuth] = useState(false); // determines whether the user has been authenticated on Sign In
   //const [regPassValid, setRegPassValid] = useState('');
   const [token, setToken] = useState('');
@@ -48,13 +49,13 @@ const Login = () => {
       console.log(data.token);
       setToken(data.token);
     }).catch(function (error) {
+      setLoginFailed(true);
       console.warn('Something went wrong.', error);
     });
 
   }
 
   const handleRegister = (e) => {
-    // setRegFailed(true);
     e.preventDefault();
     const form_ = e.target;
     const formData = new FormData(form_);
@@ -111,12 +112,16 @@ const Login = () => {
     }).then(function (result) {
       console.log(result.data);
       if (result.status === 200) {
+        setLoginFailed(false);
         nextPage();
       } else {
+        setLoginFailed(true);
         console.log("credentials invalid");
       }
 
     }).catch(function (error) {
+      setLoginFailed(true);
+      // console.log("hey");
       console.warn('Something went wrong.', error);
     });
 
@@ -146,6 +151,7 @@ const Login = () => {
 
   const switchLoginRegister = () => {
     setRegFailed(false);
+    setLoginFailed(false);
     setShowLoginForm((prevState) => !prevState);
   }
 
@@ -162,7 +168,9 @@ const Login = () => {
               onChange={(event) => { setUsername(event.target.value) }} />
             <input className="LogPass" type="password" placeholder="Password" value={Password}
               onChange={(event) => { setPassword(event.target.value) }} />
-            <button className="LoginButton" type="submit" onClick={attemptSignIn}>Sign In</button>
+            {/* <button className="LoginButton" type="submit" onClick={attemptSignIn}>Sign In</button> */}
+            <button className={`LoginButton ${loginFailed ? 'failed' : ''}`} type="submit">Sign In</button>
+            <p className={`LoginFailedMSG ${loginFailed ? 'failed' : ''}`}>Sign In Failed, Please try again.</p>
             <button onClick={nextPage}> Skip to next page</button>
             <div onClick={switchLoginRegister} className="message">Not Registered? <a href="#">Create a new account!</a></div>
           </form>
@@ -190,7 +198,7 @@ const Login = () => {
 
             {/* <button className="RegButton" type="submit">Register</button> */}
             <button className={`RegButton ${regFailed ? 'failed' : ''}`} type="submit">Register</button>
-            <p className={`RegFailedMSG ${regFailed ? 'failed' : ''}`} type="submit">Registration Failed, Please try again.</p>
+            <p className={`RegFailedMSG ${regFailed ? 'failed' : ''}`}>Registration Failed, Please try again.</p>
           </form>
           <div onClick={switchLoginRegister} className="message">Already Registered? <a href="#">Login!</a></div>
 
