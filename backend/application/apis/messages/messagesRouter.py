@@ -26,14 +26,14 @@ def create():
         
     return res
 
-#@messagesBlueprint.route('/retrieve/all/<token>', methods=['GET'])
-#def retrieveAll(token):
-@messagesBlueprint.route('/retrieve/all/', methods=['GET'])
-def retrieveAll():
+@messagesBlueprint.route('/retrieve/all/<token>', methods=['GET'])
+def retrieveAll(token):
+#@messagesBlueprint.route('/retrieve/all/', methods=['GET'])
+#def retrieveAll():
     
-    _headers = request.headers
-    token = str(_headers['token'])
-    
+    #_headers = request.headers
+    #token = str(_headers['token'])
+
     try: 
         token = str(token)
 
