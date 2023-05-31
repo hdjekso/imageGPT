@@ -23,7 +23,7 @@ def create():
         res = _manager.create(sessions, users)
     except Exception as e:
         print(e)
-        res =  make_response(jsonify({'msg': 'Failed'}), 1) 
+        res =  make_response(jsonify({'description': 'Request missing parameters'}), 1) 
         
     return res
 
@@ -39,6 +39,6 @@ def authenticate():
         res = _manager.authenticate(sessions)
     except Exception as e:
         print(e)
-        res =  make_response(jsonify({'msg': 'Failed'}), 1) 
+        res =  make_response(jsonify({'description': 'Request missing parameters'}), 1) 
 
     return res

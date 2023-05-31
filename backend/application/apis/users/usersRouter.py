@@ -22,6 +22,6 @@ def create():
         res = _manager.create(users)
     except Exception as e:
         print(e)
-        res =  make_response(jsonify({'msg': 'Failed'}), 1) 
+        res =  make_response(jsonify({'description': 'Request missing parameters'}), 1) 
         
     return res

@@ -22,7 +22,7 @@ def create():
         res = _manager.create(sessions, messages)
     except Exception as e:
         print(e)
-        res =  make_response(jsonify({'msg': 'Failed'}), 1) 
+        res =  make_response(jsonify({'description': 'Request missing parameters'}), 1) 
         
     return res
 
@@ -42,6 +42,6 @@ def retrieveAll(token):
         res = _manager.retrieveAll(sessions, messages)
     except Exception as e:
         print(e)
-        res =  make_response(jsonify({'msg': 'Failed'}), 1) 
+        res =  make_response(jsonify({'description': 'Request missing parameters'}), 1) 
         
     return res
