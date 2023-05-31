@@ -69,10 +69,8 @@ class DatabaseQuery:
         ret = []
 
         for row in tmp:
-            resp = {}
-            resp["input"] = str(row[0])
-            resp["response"] = str(row[1])
-            ret.append(resp)
+            ret.append({'role': 'user', 'content': str(row[0])})
+            ret.append({'role': 'assistant', 'content': str(row[0])})
 
         return ret
 
