@@ -85,13 +85,27 @@ const Login = () => {
       }
     }).then(function (response) {
       if (response.ok) {
-        return response.json();
+        return { data: response.json(), status: response.status };
       }
       return Promise.reject(response);
-    }).then(function (data) {
-      console.log(data);
-      setRegFailed(false);
-      switchLoginRegister();
+    }).then(function (result) {
+      console.log(result.data);
+      if (result.status === 200){
+        setRegFailed(false);
+        switchLoginRegister();
+      }else if (result.status === 1){
+        console.log("at least one of the fields is empty");
+        setRegFailed(true);
+      }else if (result.status === 6){
+        console.log("an account with this email already exists");
+        setRegFailed(true);
+      }else if (result.status === 7){
+        console.log("an account with this username already exists");
+        setRegFailed(true);
+      }else{
+        console.log("some other error was encountered");
+        setRegFailed(true);
+      }
     }).catch(function (error) {
       setRegFailed(true);
       console.log("Registration failed", regFailed);
