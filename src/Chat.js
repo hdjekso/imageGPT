@@ -30,12 +30,12 @@ const drawerWidth = 240;
 
 const apiKey = process.env.REACT_APP_GPT3_API_KEY;
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
-var token = localStorage.getItem("token");
 let conversation = [{ role: 'system', content: 'You are a helpful assistant.' }];
 //console.log(localStorage.getItem("token"));
 
 
 function Chat() {
+  var token = localStorage.getItem("token");
   const [previewImage, setPreviewImage] = useState(null);
   //const [uploadedImage, setUploadedImage] = useState(null);
   const [file, setFile] = useState(null);  // stores the image file
@@ -313,17 +313,54 @@ function Chat() {
     });*/
   }
   
+  const handleSignOut = ()=>{
+    console.log("handleSignOut called");
+    let signObj = {}
+    signObj["token"] = token;
+    let outJSON = JSON.stringify(signObj);
+    
+    //make a post request to disable the session ID/ token
+    fetch('http://127.0.0.1:5000/sessions/remove', {
+      method: 'POST',
+      body: outJSON,
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    }).then(function (response) {
+      if (response.ok) {
+        return { data: response.json(), status: response.status };
+      }
+      return Promise.reject(response);
+    }).then(function (result) {
+      if (result.status === 200) {
+        console.log("successfully disabled token");
+        localStorage.removeItem("token");
+        console.log("attempting to log localstorage token after removal: " + localStorage.getItem("token"));
+      } else {
+        console.log("token disabling failed");
+      }
+
+    }).catch(function (error) {
+      console.warn('Something went wrong with sign out.', error);
+    });
+
+    navigate('/');
+}
+  const navigateHome = () => {
+    navigate('/');
+  }
+
   const navigate = useNavigate();
   const menuItems = [
     {
       text: 'Home',
       icon: <HomeIcon color="primary" />,
-      path: '/home'
+      onClick: () => navigateHome(),
     },
     {
       text: "Sign Out",
       icon: <LogoutIcon color="primary" />,
-      path: '/'
+      onClick: () => handleSignOut(),
     }
   ]
 
@@ -366,7 +403,7 @@ function Chat() {
             <ListItem button divider
               key={item.text}
               sx={{ height: 60, p: 3, mb: 1.5 }}
-              onClick={() => navigate(item.path)}
+              onClick={item.onClick}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />

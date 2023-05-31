@@ -9,7 +9,6 @@ const HomeAppbar = () => {
       let signObj = {}
       signObj["token"] = token;
       let myJSON = JSON.stringify(signObj);
-      navigate('/');
       
       //make a post request to disable the session ID/ token
       fetch('http://127.0.0.1:5000/sessions/remove', {
@@ -35,6 +34,8 @@ const HomeAppbar = () => {
       }).catch(function (error) {
         console.warn('Something went wrong with sign out.', error);
       });
+
+      navigate('/');
   }
   return ( 
     <Box>
