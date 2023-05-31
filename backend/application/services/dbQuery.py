@@ -37,7 +37,7 @@ class DatabaseQuery:
         db.commit()
 
     def authenticateSession(self, db, sessions):
-        query = "SELECT EXISTS(SELECT `token` FROM `sessions` WHERE `token` = %s and `is_active` = 1)"
+        query = "SELECT EXISTS(SELECT `token` FROM `sessions` WHERE `token` = %s AND `is_active` = 1)"
         args = [sessions.get_token()]
         ret = db.fetchone(query, args)
 
@@ -47,7 +47,7 @@ class DatabaseQuery:
         return False
 
     def retrieveAllMessages(self, db, messages):
-        query = "SELECT image_txt, users_inp FROM messages WHERE fk_user_ID = %s"
+        query = "SELECT `image_txt`, `users_inp` FROM `messages` WHERE `fk_user_ID` = %s"
         args = [messages.get_fk_user_ID()]
         tmp = db.fetchall(query, args)
         
@@ -61,9 +61,24 @@ class DatabaseQuery:
 
         return ret
 
+    def retrieveAllInputs(self, db, messages):
+        query = "SELECT `input`, `response` FROM inputs WHERE fk_user_ID = %s AND fk_message_ID = %s"
+        args = [messages.get_fk_user_ID(), messages.get_ID()]
+        tmp = db.fetchall(query, args)
+        
+        ret = []
+
+        for row in tmp:
+            resp = {}
+            resp["input"] = str(row[0])
+            resp["response"] = str(row[1])
+            ret.append(resp)
+
+        return ret
+
     def createInput(self, db, inputs):
-        query = "INSERT INTO `inputs`(`fk_user_ID`, `fk_message_ID`, `input`) VALUES (%s, %s, %s)"
-        args = [inputs.get_fk_user_ID(), inputs.get_fk_message_ID(), inputs.get_input()]
+        query = "INSERT INTO `inputs`(`fk_user_ID`, `fk_message_ID`, `input`, `response`) VALUES (%s, %s, %s, %s)"
+        args = [inputs.get_fk_user_ID(), inputs.get_fk_message_ID(), inputs.get_input(), inputs.get_response()]
         db.execute(query, args)
         db.commit()
 
