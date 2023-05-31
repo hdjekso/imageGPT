@@ -11,16 +11,17 @@ class Manager:
             dbQuery = DatabaseQuery()
 
             fk_user_ID = dbQuery.retrieveUserIdSession(db, users)
-            users.set_ID(int(fk_user_ID))
-            sessions.set_fk_user_ID(int(fk_user_ID))
 
-            dbQuery.createSession(db, sessions)
+            if fk_user_ID: 
+                sessions.set_fk_user_ID(int(fk_user_ID))
+                dbQuery.createSession(db, sessions)
+                res = make_response(jsonify({'status': 'Success!', 'token': sessions.token}), 200)
+            else:
+                res = make_response(jsonify({'description': 'Invalid username or password'}), 4)
 
             db.close()
-
-            res = sessions.response()
         except MySQL.Error as e:
-            res =  make_response(jsonify({'msg': str(e)}), 1) 
+            res =  make_response(jsonify({'description': 'MySQL DB Service error: ' + str(e)}), 3) 
 
         return res
 
@@ -29,16 +30,14 @@ class Manager:
             db = Database()
             dbQuery = DatabaseQuery()
 
-            print(dbQuery.authenticateSession(db, sessions))
-
-            if not dbQuery.authenticateSession(db, sessions) : 
+            if not dbQuery.authenticateSession(db, sessions): 
                 res =  make_response(jsonify({'err': "Session is Invalid!"}), 5)  
             else : 
-                res = sessions.response()
+                res = make_response(jsonify({'status': 'Success!', 'token': sessions.token}), 200)
 
             db.close()
         except MySQL.Error as e:
-            res =  make_response(jsonify({'msg': str(e)}), 1) 
+            res =  make_response(jsonify({'description': 'MySQL DB Service error: ' + str(e)}), 3) 
 
         return res
     

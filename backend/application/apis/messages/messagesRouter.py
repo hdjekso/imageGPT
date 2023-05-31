@@ -18,30 +18,21 @@ def create():
 
         sessions = Sessions(ID = None, fk_user_ID = None, token = token, create_date = None, modify_date = None)
         messages = Messages(ID = None, fk_user_ID = None, image_txt = image_txt, users_inp = users_inp, create_date = None, modify_date = None)
-
-        res = _manager.create(sessions, messages)
     except Exception as e:
-        print(e)
-        res =  make_response(jsonify({'description': 'Request missing parameters'}), 1) 
+        return make_response(jsonify({'description': 'Request missing parameters'}), 1) 
+
+    return _manager.create(sessions, messages)
         
-    return res
 
 @messagesBlueprint.route('/retrieve/all/<token>', methods=['GET'])
 def retrieveAll(token):
-#@messagesBlueprint.route('/retrieve/all/', methods=['GET'])
-#def retrieveAll():
-    
-    #_headers = request.headers
-    #token = str(_headers['token'])
-
     try: 
         token = str(token)
 
         sessions = Sessions(ID = None, fk_user_ID = None, token = token, create_date = None, modify_date = None)
         messages = Messages(ID = None, fk_user_ID = None, image_txt = None, users_inp = None, create_date = None, modify_date = None)
-        res = _manager.retrieveAll(sessions, messages)
     except Exception as e:
         print(e)
-        res =  make_response(jsonify({'description': 'Request missing parameters'}), 1) 
-        
-    return res
+        return make_response(jsonify({'description': 'Request missing parameters'}), 1) 
+
+    return _manager.retrieveAll(sessions, messages)

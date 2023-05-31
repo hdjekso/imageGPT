@@ -19,9 +19,8 @@ def create():
 
         users = Users(ID = None, fname = fname, lname = lname, email = email, username = username, password = password, create_date = None, modify_date = None)
 
-        res = _manager.create(users)
     except Exception as e:
         print(e)
-        res =  make_response(jsonify({'description': 'Request missing parameters'}), 1) 
-        
-    return res
+        return  make_response(jsonify({'description': 'Request missing parameters'}), 1) 
+
+    return _manager.create(users)
