@@ -14,9 +14,14 @@ class Manager:
             
             db.close()
 
-            res = users.response()
+            return make_response(jsonify({'status': 'Success!'}), 200)
         except MySQL.Error as e:
-            res =  make_response(jsonify({'msg': str(e)}), 1) 
+            err = str(e)
 
-        return res
+            if "Duplicate" in err and "uc_email" in err:
+                return make_response(jsonify({'description': 'Email was already taken'}), 6)
+            elif "Duplicate" in err and "uc_username" in err:
+                return make_response(jsonify({'description': 'Username was already taken'}), 7)
+            else: 
+                return  make_response(jsonify({'description': 'MySQL DB Service error: ' + str(e)}), 3) 
     

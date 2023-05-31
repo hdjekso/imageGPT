@@ -12,7 +12,9 @@ class DatabaseQuery:
         query = "SELECT `ID` FROM `users` WHERE `username` = %s AND `password` = %s LIMIT 1"
         args = [users.get_username(), users.get_password_hash()]
         ret = db.fetchone(query, args)
-        return ret[0]
+        
+        if ret: return ret[0]
+        return None
 
     def createSession(self, db, sessions):
         query = "INSERT INTO `sessions`(`fk_user_ID`, `token`) VALUES (%s, %s)"
@@ -21,10 +23,12 @@ class DatabaseQuery:
         db.commit()
 
     def retrieveUserIdToken(self, db, sessions):
-        query = "SELECT `fk_user_ID` FROM `sessions` WHERE `token` = %s LIMIT 1"
+        query = "SELECT `fk_user_ID` FROM `sessions` WHERE `token` = %s and `is_active` = 1 LIMIT 1"
         args = [sessions.get_token()]
         ret = db.fetchone(query, args)
-        return ret[0]
+        
+        if ret: return ret[0]
+        return None
 
     def createMessage(self, db, messages):
         query = "INSERT INTO `messages`(`fk_user_ID`, `image_txt`, `users_inp`) VALUES (%s, %s, %s)"
@@ -33,7 +37,7 @@ class DatabaseQuery:
         db.commit()
 
     def authenticateSession(self, db, sessions):
-        query = "SELECT EXISTS(SELECT `token` FROM `sessions` WHERE token = %s)"
+        query = "SELECT EXISTS(SELECT `token` FROM `sessions` WHERE `token` = %s and `is_active` = 1)"
         args = [sessions.get_token()]
         ret = db.fetchone(query, args)
 
@@ -56,3 +60,15 @@ class DatabaseQuery:
             ret.append(resp)
 
         return ret
+
+    def createInput(self, db, inputs):
+        query = "INSERT INTO `inputs`(`fk_user_ID`, `fk_message_ID`, `input`) VALUES (%s, %s, %s)"
+        args = [inputs.get_fk_user_ID(), inputs.get_fk_message_ID(), inputs.get_input()]
+        db.execute(query, args)
+        db.commit()
+
+    def removeSession(self, db, sessions):
+        query = "UPDATE `sessions` set `is_active` = 0 WHERE `token` = %s and `is_active` = 1"
+        args = [sessions.get_token()]
+        db.execute(query, args)
+        db.commit()

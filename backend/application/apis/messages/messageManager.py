@@ -11,16 +11,17 @@ class Manager:
             dbQuery = DatabaseQuery()
 
             fk_user_ID = dbQuery.retrieveUserIdToken(db, sessions)
-            messages.set_fk_user_ID(int(fk_user_ID))
-            sessions.set_fk_user_ID(int(fk_user_ID))
-
-            dbQuery.createMessage(db, messages)
+            
+            if fk_user_ID: 
+                messages.set_fk_user_ID(int(fk_user_ID))
+                dbQuery.createMessage(db, messages)
+                res = make_response(jsonify({'status': 'Success!'}), 200)
+            else:
+                res = make_response(jsonify({'description': 'Invalid session token'}), 2)
 
             db.close()
-
-            res = messages.response()
         except MySQL.Error as e:
-            res =  make_response(jsonify({'msg': str(e)}), 1) 
+            res =  make_response(jsonify({'description': 'MySQL DB Service error: ' + str(e)}), 3) 
 
         return res
 
@@ -30,15 +31,17 @@ class Manager:
             dbQuery = DatabaseQuery()
 
             fk_user_ID = dbQuery.retrieveUserIdToken(db, sessions)
-            messages.set_fk_user_ID(int(fk_user_ID))
-            sessions.set_fk_user_ID(int(fk_user_ID))
 
-            res = dbQuery.retrieveAllMessages(db, messages)
-            res = make_response(jsonify(res))
+            if fk_user_ID: 
+                messages.set_fk_user_ID(int(fk_user_ID))
+                res = dbQuery.retrieveAllMessages(db, messages)
+                res = make_response(jsonify(res), 200)
+            else:
+                res = make_response(jsonify({'description': 'Invalid session token'}), 2)
 
             db.close()
         except MySQL.Error as e:
-            res =  make_response(jsonify({'msg': str(e)}), 1) 
+            res =  make_response(jsonify({'description': 'MySQL DB Service error: ' + str(e)}), 3) 
 
         return res
     
