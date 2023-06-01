@@ -26,6 +26,8 @@ import "./Input.css";
 import { Cloud } from '@mui/icons-material';
 import Tesseract from 'tesseract.js';
 import { createWorker } from 'tesseract.js';
+import { v4 as uuid } from 'uuid';
+
 const drawerWidth = 240;
 
 const apiKey = process.env.REACT_APP_GPT3_API_KEY;
@@ -47,59 +49,36 @@ function Chat() {
   const [messages, setMessages] = useState([]);
 
   const [generating, setGenerating] = useState(false); // set the state of the API: whether it is generating a response or not
+  const uniqueKey = uuid();
 
   const handleMessage = async (content_, type_) => {
     setGenerating(true);
-    //pass user input & token in json format to db IF it is the first input provided OR if it is the second input provided (1st is image)
-    if (messages.length === 0){
-      let obj = {};
-      obj["token"] = token;
-      obj["image_txt"] = "";
-      obj["users_inp"] = content_;
-      let myJSON = JSON.stringify(obj);
-      console.log(myJSON);
-  
-      fetch('http://127.0.0.1:5000/messages/create', {
-        method: 'POST',
-        body: myJSON,
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8' 
-        }
-      }).then(function (response) {
-        if (response.ok) {
-          return response.json(); 
-        }
-        return Promise.reject(response);
-      }).then(function (data) {
-        console.log(data);
-      }).catch(function (error) {
-        console.warn('Something went wrong.', error);
-      });
-    }else if (messages.length === 1 && messages[0].type === "imgTxt"){
-      let obj = {};
-      obj["token"] = token;
-      obj["image_txt"] = messages[0].content;
-      obj["users_inp"] = content_;
-      let myJSON = JSON.stringify(obj);
-      console.log(myJSON);
-  
-      fetch('http://127.0.0.1:5000/messages/create', {
-        method: 'POST',
-        body: myJSON,
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8' 
-        }
-      }).then(function (response) {
-        if (response.ok) {
-          return response.json(); 
-        }
-        return Promise.reject(response);
-      }).then(function (data) {
-        console.log(data);
-      }).catch(function (error) {
-        console.warn('Something went wrong.', error);
-      });
-    }
+    
+    //pass user input & token in json format to db (single line of dialogue)
+    let userObj = {};
+    userObj["token"] = token;
+    userObj["key"] = uniqueKey;
+    userObj["role"] = "user";
+    userObj["content"] = content_;
+    let userJSON = JSON.stringify(userObj);
+    console.log(userJSON);
+
+    fetch('http://127.0.0.1:5000/messages/create', {
+      method: 'POST',
+      body: userJSON,
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8' 
+      }
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json(); 
+      }
+      return Promise.reject(response);
+    }).then(function (data) {
+      console.log(data);
+    }).catch(function (error) {
+      console.warn('Something went wrong.', error);
+    });
 
     //to be passed into the API
     console.log(content_);
@@ -110,6 +89,31 @@ function Chat() {
     //console.log('Assistant:', reply);
     conversation.push({role: 'assistant', content: reply});
 
+    //pass api response into db
+    let apiObj = {};
+    apiObj["token"] = token;
+    apiObj["key"] = uniqueKey;
+    apiObj["role"] = "assistant";
+    apiObj["content"] = reply;
+    let apiJSON = JSON.stringify(apiObj);
+
+    fetch('http://127.0.0.1:5000/messages/create', {
+      method: 'POST',
+      body: apiJSON,
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8' 
+      }
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json(); 
+      }
+      return Promise.reject(response);
+    }).then(function (data) {
+      console.log(data);
+    }).catch(function (error) {
+      console.warn('Something went wrong.', error);
+    });
+
     //used to map out user/ API messages later
     const newUserMessage = { content: content_, type: type_};
     const newAPIMessage = { content: reply, type: "receive"};
@@ -119,98 +123,6 @@ function Chat() {
 
 
   }
-
-  //old function
-    /*const handleMessage = async (content, type) => {
-    //setUserInput(content); //updates userinput variable so that it can be referenced by the API
-
-    //Call the API and get the response
-    var reply = '';
-
-    //Create a new message from the API response
-    const apiMessage = { content: reply, type: "receive", id: messages.length + 1 };
-
-    const newMessage = { content: content, type: type, id: messages.length }
-
-    console.log(content);
-
-
-
-    //updates messages and checks if the previous one is the correct one 
-    if (messages.length > 0) {
-      const prevMess = messages[messages.length - 1].type; // makes sure the previous message is an image upload
-      console.log(prevMess);
-      if (prevMess === "imgTxt") {
-        // in the case when the previous message was an image
-        console.log("This is what a message to chat gpt would look like if the prev. msg was an image" + messages[messages.length - 1].content + " " + content); 
-        reply = await gptHandleMessage(messages[messages.length - 1].content + "\n" + content); // passes imgtxt concat. with user input to API
-      }else{
-        reply = await gptHandleMessage(content); //prev msg not imgtxt, passes only user input to the API
-      }
-    }else{ //if this is the first msg
-      reply = await gptHandleMessage(content); //passes only user input to the API
-    }
-
-    //pass user input & token in json format to db IF it is the first input provided OR if it is the second input provided (1st is image)
-    if (messages.length === 0){
-      var obj = {};
-      obj["token"] = token;
-      obj["image_txt"] = "";
-      obj["users_inp"] = content;
-      var myJSON = JSON.stringify(obj);
-      console.log(myJSON);
-  
-      fetch('http://127.0.0.1:5000/messages/create', {
-        method: 'POST',
-        body: myJSON,
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8' 
-        }
-      }).then(function (response) {
-        if (response.ok) {
-          return response.json(); 
-        }
-        return Promise.reject(response);
-      }).then(function (data) {
-        console.log(data);
-      }).catch(function (error) {
-        console.warn('Something went wrong.', error);
-      });
-    }else if (messages.length === 1 && messages[0].type === "imgTxt"){
-      var obj = {};
-      obj["token"] = token;
-      obj["image_txt"] = messages[0].content;
-      obj["users_inp"] = content;
-      var myJSON = JSON.stringify(obj);
-      console.log(myJSON);
-  
-      fetch('http://127.0.0.1:5000/messages/create', {
-        method: 'POST',
-        body: myJSON,
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8' 
-        }
-      }).then(function (response) {
-        if (response.ok) {
-          return response.json(); 
-        }
-        return Promise.reject(response);
-      }).then(function (data) {
-        console.log(data);
-      }).catch(function (error) {
-        console.warn('Something went wrong.', error);
-      });
-    }
-
-    const updatedMessages = [...messages, newMessage];
-    //const updatedMessages = messages.concat([newMessage, apiMessage]); // Add both user message and API message at once
-    // const updatedMessages = messages.concat(newMessage);
-
-    setMessages(updatedMessages);
-    console.log(updatedMessages);
-    setUserInput('');
-
-  }*/
 
   const gptHandleMessage = async (conversation) => {
     //setGenerating('true');
