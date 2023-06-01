@@ -74,6 +74,7 @@ const Login = () => {
     obj["email"] = email_;
     obj["username"] = regUserName;
     obj["password"] = regPass;
+    let notEmpty = (obj["fname"] !== '' && obj["lname"] !== '' && obj["email"] !== '' && obj["username"] !== '' && obj["password"] !== '');
     let myJSON = JSON.stringify(obj);
     console.log(myJSON);
 
@@ -93,23 +94,23 @@ const Login = () => {
       if (result.status === 200){
         setRegFailed(false);
         switchLoginRegister();
-      }else if (result.status === 1){
+      }
+    }).catch(function (error) {
+      setRegFailed(true);
+      console.warn('Something went wrong.', error);
+      if (error.status === 1 || !notEmpty){
         console.log("at least one of the fields is empty");
         setRegFailed(true);
-      }else if (result.status === 6){
+      }else if (error.status === 6){
         console.log("an account with this email already exists");
         setRegFailed(true);
-      }else if (result.status === 7){
+      }else if (error.status === 7){
         console.log("an account with this username already exists");
         setRegFailed(true);
       }else{
         console.log("some other error was encountered");
         setRegFailed(true);
       }
-    }).catch(function (error) {
-      setRegFailed(true);
-      console.log("Registration failed", regFailed);
-      console.warn('Something went wrong.', error);
     });
   }
 
