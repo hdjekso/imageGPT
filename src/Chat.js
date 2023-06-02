@@ -49,7 +49,33 @@ function Chat() {
   const [messages, setMessages] = useState([]);
 
   const [generating, setGenerating] = useState(false); // set the state of the API: whether it is generating a response or not
-  const uniqueKey = uuid();
+  const [uniqueKey, setUniqueKey] = useState('');
+
+  useEffect(()=>{
+    console.log("uniqueKey updated: " + uniqueKey);
+    if( (file != null) ){
+      convertText();
+    }
+    let tokenObj = []
+    tokenObj["token"] = token;
+    fetch('http://127.0.0.1:5000/conversations/create', {
+      method: 'POST',
+      body: JSON.stringify(tokenObj),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8' 
+      }
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json(); 
+      }
+      return Promise.reject(response);
+    }).then(function (data) {
+      console.log(data);
+      setUniqueKey(data.conversation_token);
+    }).catch(function (error) {
+      console.warn('Something went wrong.', error);
+    });
+  })
 
   const handleMessage = async (content_, type_) => {
     setGenerating(true);
@@ -176,13 +202,6 @@ function Chat() {
       await worker.terminate();
   })();
   };
-
-  useEffect(()=>{
-    if( (file != null) ){
-      convertText();
-    }
-  })
-  
   
 
   const handleSelectImage = (event) => {
