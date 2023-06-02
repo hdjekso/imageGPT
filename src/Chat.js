@@ -290,6 +290,7 @@ function Chat() {
   }
 
   const handleUploadImage = async () => {
+    setConversionComplete(false);
     await convertText();
     const link = URL.createObjectURL(file);
     setUploaded(true);
@@ -297,11 +298,11 @@ function Chat() {
     console.log("image converted, text is: " + imgText);
     //handleMessage(imgText, "imgTxt");
 
-    if (conversionComplete) {
+    /*if (conversionComplete) {
       handleMessage(imgText, "imgTxt");
     } else {
       console.log("Image conversion is not yet complete.");
-    }
+    }*/
   }
   
   const handleSignOut = ()=>{
