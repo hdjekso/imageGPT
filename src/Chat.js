@@ -43,6 +43,7 @@ function Chat() {
   const [file, setFile] = useState(null);  // stores the image file
   const [imageUrl, setImageUrl] = useState(null); // stores the link to the image
   const [uploaded, setUploaded] = useState(false);
+  const [conversionComplete, setConversionComplete] = useState(false);
 
   const [imgText, setImgText] = useState(''); // stores text from img
 
@@ -50,9 +51,16 @@ function Chat() {
 
   const [generating, setGenerating] = useState(false); // set the state of the API: whether it is generating a response or not
   const [uniqueKey, setUniqueKey] = useState('');
+  
+  useEffect(() => {
+    if (conversionComplete) {
+      handleMessage(imgText, 'imgTxt');
+    }
+  }, [conversionComplete]);
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("uniqueKey updated: " + uniqueKey);
+    console.log("imgTxt updated: " + imgText);
     if( (file != null) ){
       convertText();
     }
@@ -77,9 +85,61 @@ function Chat() {
     }).catch(function (error) {
       console.warn('Something went wrong.', error);
     });
-  })
+  }, [])
 
+  //passes messages twice at a time
   const handleMessage = async (content_, type_) => {
+    setGenerating(true);
+    
+    //store user input & token (to be passed into db)
+    let convObj = {};
+    convObj["token"] = token;
+    convObj["usr_content"] = content_; //{role: 'user', content: content_};
+
+    //to be passed into the API
+    console.log(content_);
+    conversation.push({role: 'user', content: content_});
+    //setGenerating('true');
+    const reply = await gptHandleMessage(conversation);
+    //setGenerating('false');
+    //console.log('Assistant:', reply);
+    conversation.push({role: 'assistant', content: reply});
+
+    //update api response in convObj
+    convObj["gpt_content"] = reply;//{role: 'assistant', content: reply};
+    convObj["conversation_token"] = uniqueKey;
+    let convJSON = JSON.stringify(convObj);
+    console.log(convJSON);
+
+    fetch('http://127.0.0.1:5000/dialogues/create', {
+      method: 'POST',
+      body: convJSON,
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8' 
+      }
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json(); 
+      }
+      return Promise.reject(response);
+    }).then(function (data) {
+      console.log(data);
+    }).catch(function (error) {
+      console.warn('Something went wrong.', error);
+    });
+
+    //used to map out user/ API messages later
+    const newUserMessage = { content: content_, type: type_};
+    const newAPIMessage = { content: reply, type: "receive"};
+    setMessages([...messages, newUserMessage, newAPIMessage]);
+
+    setGenerating(false);
+
+
+  }
+
+  //passes messages one by one
+  /*const handleMessage = async (content_, type_) => {
     setGenerating(true);
     
     //pass user input & token in json format to db (single line of dialogue)
@@ -150,7 +210,7 @@ function Chat() {
     setGenerating(false);
 
 
-  }
+  }*/
 
   const gptHandleMessage = async (conversation) => {
     //setGenerating('true');
@@ -192,7 +252,9 @@ function Chat() {
       await worker.loadLanguage('eng');
       await worker.initialize('eng');
       const { data: { text } } = await worker.recognize(file);
+      console.log(text);
       setImgText(text);
+      setConversionComplete(true);
       
       // if (text != " "){
       //   setImgText(text);
@@ -227,23 +289,19 @@ function Chat() {
     setUploaded(0);
   }
 
-  const handleUploadImage = () => {
-    convertText();
+  const handleUploadImage = async () => {
+    await convertText();
     const link = URL.createObjectURL(file);
     setUploaded(true);
     setImageUrl(link);
-    handleMessage(imgText, "imgTxt");
+    console.log("image converted, text is: " + imgText);
+    //handleMessage(imgText, "imgTxt");
 
-    /*const data = new FormData();
-    data.append('files[]', previewImage);
-
-    
-    fetch(/"server url", { method: 'POST', body: data }).then(async (response) => {
-        const imageResponse = await response.json();
-        setUploadedImage(imageResponse);
-    }).catch((err) => {
-
-    });*/
+    if (conversionComplete) {
+      handleMessage(imgText, "imgTxt");
+    } else {
+      console.log("Image conversion is not yet complete.");
+    }
   }
   
   const handleSignOut = ()=>{
@@ -280,7 +338,8 @@ function Chat() {
     navigate('/');
 }
   const navigateHome = () => {
-    navigate('/');
+    setMessages([]); // reset messages  
+    navigate('/Home');
   }
 
   const navigate = useNavigate();

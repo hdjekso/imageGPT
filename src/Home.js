@@ -15,28 +15,6 @@ function Home_() {
   }
 
   const fetchData = async () => {
-    /*try {
-      const body = JSON.stringify({ token });
-      const local_token = token;
-      const apiURL = 'https://dummy.restapiexample.com/api/v1/employees';
-      //const urlWithToken = apiURL + "/" + local_token;
-      //console.log(urlWithToken);
-
-      const response = await fetch(apiURL, {
-        method: 'GET',
-      });
-
-      if (response.ok) {
-        const responseData = await response.json();
-        setData(responseData);
-      } else {
-        // Handle error response
-        console.error('Request failed with status:', response.status);
-      }
-    } catch (error) {
-      // Handle network error
-      console.error('Request failed:', error);
-    }*/
     const apiURL = 'http://127.0.0.1:5000/messages/retrieve/all/';
     const local_token = token;
     fetch(`http://127.0.0.1:5000/messages/retrieve/all/${local_token}`)
