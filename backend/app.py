@@ -1,8 +1,8 @@
 # Blueprints.
 from application.apis.users.usersRouter import usersBlueprint
 from application.apis.sessions.sessionsRouter import sessionsBlueprint
-from application.apis.messages.messagesRouter import messagesBlueprint
-from application.apis.inputs.inputsRouter import inputsBlueprint
+from application.apis.conversations.conversationsRouter import conversationsBlueprint
+from application.apis.dialogues.dialoguesRouter import dialoguesBlueprint
 
 # Flask and Flask Cors import.
 from flask import Flask, jsonify, make_response
@@ -22,8 +22,8 @@ CORS(messagesBlueprint, resources={r"/*": {"origins": "*"}})
 # Register Blueprints.
 app.register_blueprint(usersBlueprint)
 app.register_blueprint(sessionsBlueprint)
-app.register_blueprint(messagesBlueprint)
-app.register_blueprint(inputsBlueprint)
+app.register_blueprint(conversationsBlueprint)
+app.register_blueprint(dialoguesBlueprint)
 
 @app.route('/', methods=['GET'])
 def index():
