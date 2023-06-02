@@ -30,12 +30,11 @@ CREATE TABLE `sessions` (
  CONSTRAINT `user_session` FOREIGN KEY (`fk_user_ID`) REFERENCES `users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
 
-'CREATE TABLE `messages` (
+'CREATE TABLE `conversations` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `conversation_token` varchar(255) NOT NULL DEFAULT '''',
   `is_active` int(11) NOT NULL DEFAULT ''1'',
   `fk_user_ID` int(11) NOT NULL,
-  `image_txt` varchar(255) NOT NULL DEFAULT '''',
-  `users_inp` varchar(255) NOT NULL DEFAULT '''',
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modify_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`),
@@ -43,18 +42,18 @@ CREATE TABLE `sessions` (
   CONSTRAINT `user_message` FOREIGN KEY (`fk_user_ID`) REFERENCES `users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1'
 
-'CREATE TABLE `inputs` (
+'CREATE TABLE `dialogues` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `is_active` int(11) NOT NULL DEFAULT ''1'',
   `fk_user_ID` int(11) NOT NULL,
-  `fk_message_ID` int(11) NOT NULL,
-  `input` varchar(255) NOT NULL DEFAULT '''',
-  `response` varchar(255) NOT NULL DEFAULT '''',
+  `fk_conversation_ID` int(11) NOT NULL,
+  `usr_content` varchar(255) NOT NULL DEFAULT '''',
+  `gpt_content` varchar(255) NOT NULL DEFAULT '''',
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modify_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`),
-  KEY `message_input` (`fk_message_ID`),
   KEY `user_input` (`fk_user_ID`),
-  CONSTRAINT `message_input` FOREIGN KEY (`fk_message_ID`) REFERENCES `messages` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `conversation_dialogue` (`fk_conversation_ID`),
+  CONSTRAINT `conversation_dialogue` FOREIGN KEY (`fk_conversation_ID`) REFERENCES `conversations` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `user_input` FOREIGN KEY (`fk_user_ID`) REFERENCES `users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1'
