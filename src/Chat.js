@@ -56,11 +56,13 @@ function Chat() {
     if( (file != null) ){
       convertText();
     }
-    let tokenObj = []
+    let tokenObj = {};
     tokenObj["token"] = token;
+    let tokenJSON = JSON.stringify(tokenObj);
+    console.log(tokenJSON);
     fetch('http://127.0.0.1:5000/conversations/create', {
       method: 'POST',
-      body: JSON.stringify(tokenObj),
+      body: tokenJSON,
       headers: {
         'Content-type': 'application/json; charset=UTF-8' 
       }
