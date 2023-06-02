@@ -30,9 +30,17 @@ class DatabaseQuery:
         if ret: return ret[0]
         return None
 
-    def createMessage(self, db, messages):
-        query = "INSERT INTO `messages`(`fk_user_ID`, `image_txt`, `users_inp`) VALUES (%s, %s, %s)"
-        args = [messages.get_fk_user_ID(), messages.get_image_txt(), messages.get_users_inp()]
+    def retrieveConvoId(self, db, conversations):
+        query = "SELECT `ID` FROM `conversations` WHERE `conversation_token` = %s AND `fk_user_ID` = %s LIMIT 1"
+        args = [conversations.get_conversation_token(), conversations.get_fk_user_ID()]
+        ret = db.fetchone(query, args)
+        
+        if ret: return ret[0]
+        return None
+
+    def createConversation(self, db, conversations):
+        query = "INSERT INTO `conversations`(`fk_user_ID`, `conversation_token`) VALUES (%s, %s)"
+        args = [conversations.get_fk_user_ID(), conversations.get_conversation_token()]
         db.execute(query, args)
         db.commit()
 
@@ -46,37 +54,38 @@ class DatabaseQuery:
             
         return False
 
-    def retrieveAllMessages(self, db, messages):
-        query = "SELECT `image_txt`, `users_inp` FROM `messages` WHERE `fk_user_ID` = %s"
-        args = [messages.get_fk_user_ID()]
+    def retrieveAllConversations(self, db, sessions):
+        query = "SELECT `conversation_token` FROM `conversations` WHERE `fk_user_ID` = %s"
+        args = [sessions.get_fk_user_ID()]
         tmp = db.fetchall(query, args)
         
         ret = []
 
         for row in tmp:
             resp = {}
-            resp["image_txt"] = str(row[0])
-            resp["users_inp"] = str(row[1])
+            resp["conversation_token"] = str(row[0])
             ret.append(resp)
 
         return ret
 
-    def retrieveAllInputs(self, db, messages):
-        query = "SELECT `input`, `response` FROM inputs WHERE fk_user_ID = %s AND fk_message_ID = %s"
-        args = [messages.get_fk_user_ID(), messages.get_ID()]
+    def retrieveAllConvos(self, db, conversations):
+        query = "SELECT `usr_content`, `gpt_content` FROM `dialogues` WHERE fk_user_ID = %s AND fk_conversation_ID = %s"
+        args = [conversations.get_fk_user_ID(), conversations.get_ID()]
         tmp = db.fetchall(query, args)
         
         ret = []
 
+        ret.append({'role': 'system', 'content': 'You are a helpful assistant.'})
+
         for row in tmp:
             ret.append({'role': 'user', 'content': str(row[0])})
-            ret.append({'role': 'assistant', 'content': str(row[0])})
+            ret.append({'role': 'assistant', 'content': str(row[1])})
 
         return ret
 
-    def createInput(self, db, inputs):
-        query = "INSERT INTO `inputs`(`fk_user_ID`, `fk_message_ID`, `input`, `response`) VALUES (%s, %s, %s, %s)"
-        args = [inputs.get_fk_user_ID(), inputs.get_fk_message_ID(), inputs.get_input(), inputs.get_response()]
+    def createDial(self, db, dialogues):
+        query = "INSERT INTO `dialogues`(`fk_user_ID`, `fk_conversation_ID`, `usr_content`, `gpt_content`) VALUES (%s, %s, %s, %s)"
+        args = [dialogues.get_fk_user_ID(), dialogues.get_fk_conversation_ID(), dialogues.get_usr_content(), dialogues.get_gpt_content()]
         db.execute(query, args)
         db.commit()
 
