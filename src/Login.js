@@ -18,6 +18,7 @@ const Login = () => {
   const [userAuth, setUserAuth] = useState(false); // determines whether the user has been authenticated on Sign In
   //const [regPassValid, setRegPassValid] = useState('');
   const [token, setToken] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     console.log("Token updated: " + token);
@@ -91,24 +92,28 @@ const Login = () => {
       return Promise.reject(response);
     }).then(function (result) {
       console.log(result.data);
-      if (result.status === 200){
+      if (result.status === 200) {
         setRegFailed(false);
         switchLoginRegister();
       }
     }).catch(function (error) {
       setRegFailed(true);
       console.warn('Something went wrong.', error);
-      if (error.status === 1 || !notEmpty){
+      if (error.status === 1 || !notEmpty) {
         console.log("at least one of the fields is empty");
+        setErrorMessage("At least one of the fields is empty");
         setRegFailed(true);
-      }else if (error.status === 6){
+      } else if (error.status === 6) {
         console.log("an account with this email already exists");
+        setErrorMessage("An account with this email already exists");
         setRegFailed(true);
-      }else if (error.status === 7){
+      } else if (error.status === 7) {
         console.log("an account with this username already exists");
+        setErrorMessage("An account with this username already exists");
         setRegFailed(true);
-      }else{
+      } else {
         console.log("some other error was encountered");
+        setErrorMessage("Some other error was encountered");
         setRegFailed(true);
       }
     });
@@ -223,7 +228,7 @@ const Login = () => {
 
             {/* <button className="RegButton" type="submit">Register</button> */}
             <button className={`RegButton ${regFailed ? 'failed' : ''}`} type="submit">Register</button>
-            <p className={`RegFailedMSG ${regFailed ? 'failed' : ''}`}>Registration Failed, Please try again.</p>
+            <p className={`RegFailedMSG ${regFailed ? 'failed' : ''}`}>Registration Failed, {errorMessage}</p>
           </form>
           <div onClick={switchLoginRegister} className="message">Already Registered? <a href="#">Login!</a></div>
 
