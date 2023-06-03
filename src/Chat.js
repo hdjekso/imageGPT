@@ -33,6 +33,7 @@ const drawerWidth = 240;
 const apiKey = process.env.REACT_APP_GPT3_API_KEY;
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
 let conversation = [{ role: 'system', content: 'You are a helpful assistant.' }];
+const storedData = localStorage.getItem('convo');
 //console.log(localStorage.getItem("token"));
 
 
@@ -51,6 +52,15 @@ function Chat() {
 
   const [generating, setGenerating] = useState(false); // set the state of the API: whether it is generating a response or not
   const [uniqueKey, setUniqueKey] = useState('');
+
+  useEffect( () => {
+    if (storedData){
+      console.log(storedData);
+      conversation = [...conversation, ...storedData];
+      console.log("concatenation done");
+      console.log(conversation);
+    }
+  })
   
   useEffect(() => {
     if (conversionComplete) {
@@ -100,7 +110,8 @@ function Chat() {
     console.log(content_);
     conversation.push({role: 'user', content: content_});
     //setGenerating('true');
-    const reply = await gptHandleMessage(conversation);
+    let reply = await gptHandleMessage(conversation);
+    reply = reply.substring(0, 1500); //trim api response
     //setGenerating('false');
     //console.log('Assistant:', reply);
     conversation.push({role: 'assistant', content: reply});
@@ -295,7 +306,7 @@ function Chat() {
     const link = URL.createObjectURL(file);
     setUploaded(true);
     setImageUrl(link);
-    console.log("image converted, text is: " + imgText);
+    //console.log("image converted, text is: " + imgText);
     //handleMessage(imgText, "imgTxt");
 
     /*if (conversionComplete) {

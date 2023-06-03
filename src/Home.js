@@ -9,19 +9,23 @@ function Home_() {
   var token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [data, setData] = useState(null);
+  const [oldIDs, setOldIDs] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const handleNewQ = () => {
     navigate("/Chat");
   }
 
   const fetchData = async () => {
-    const apiURL = 'http://127.0.0.1:5000/messages/retrieve/all/';
+    const apiURL = 'http://127.0.0.1:5000/conversations/retrieve/all/';
     const local_token = token;
-    fetch(`http://127.0.0.1:5000/messages/retrieve/all/${local_token}`)
+    fetch(`http://127.0.0.1:5000/conversations/retrieve/all/${local_token}`)
       .then(response => response.json())
       .then(data => {
         // Process the retrieved data
-        console.log(data);
+        setOldIDs(data.slice(-5)); //retrieve the last 5 elements of the array
+        setIsLoaded(true);
+        //console.log(oldIDs);
       })
       .catch(error => {
         console.error('Error occurred while fetching data:', error);
@@ -29,8 +33,10 @@ function Home_() {
   };
 
   useEffect(() => {
-    console.log("localstorage token: " + token);
+    //console.log("localstorage token: " + token);
     fetchData();
+    console.log("oldIDs updated: " + oldIDs);
+    //console.log("oldID 5: " + oldIDs[4]["conversation_token"]);
   }, []);
 
   return (
@@ -86,8 +92,12 @@ function Home_() {
           alignItems: 'center',
           width: '100%'
         }}>
-          <HomeCard />
-          <HomeCard />
+          <HomeCard msgID={isLoaded? oldIDs[4]["conversation_token"] : 'loading...'}/>
+          <HomeCard msgID={isLoaded? oldIDs[3]["conversation_token"] : 'loading...'}/>
+          <HomeCard msgID={isLoaded? oldIDs[2]["conversation_token"] : 'loading...'}/>
+          <HomeCard msgID={isLoaded? oldIDs[1]["conversation_token"] : 'loading...'}/>
+          <HomeCard msgID={isLoaded? oldIDs[0]["conversation_token"] : 'loading...'}/>
+          
         </Stack>
       </Container>
     </Grid>
