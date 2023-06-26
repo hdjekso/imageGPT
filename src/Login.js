@@ -17,7 +17,7 @@ const Login = () => {
   const [loginFailed, setLoginFailed] = useState(false);
   const [userAuth, setUserAuth] = useState(false); // determines whether the user has been authenticated on Sign In
   //const [regPassValid, setRegPassValid] = useState('');
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState(''); //session token
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {

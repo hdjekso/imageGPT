@@ -25,7 +25,7 @@ const HomeCard = ({msgID}) => {
 		let myJSON = JSON.stringify(obj);
 		//const apiURL = 'http://127.0.0.1:5000/dialogues/retrieve/all/';
 		const local_token = token;
-		console.log("concatenated url: " + `http://127.0.0.1:5000/dialogues/retrieve/all/${local_token}/${msgID}`);
+		//console.log("concatenated url: " + `http://127.0.0.1:5000/dialogues/retrieve/all/${local_token}/${msgID}`);
 		fetch(`http://127.0.0.1:5000/dialogues/retrieve/all/${local_token}`, {
 				method: 'POST',
 				body: myJSON,
