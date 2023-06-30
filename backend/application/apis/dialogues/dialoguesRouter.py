@@ -26,12 +26,11 @@ def create():
 
     return _manager.create(sessions, conversations, dialogues)
 
-@dialoguesBlueprint.route('/retrieve/all/<token>', methods=['GET'])
-def retrieveAll(token):
+@dialoguesBlueprint.route('/retrieve/all/<token>/<conversation_token>', methods=['GET'])
+def retrieveAll(token, conversation_token):
     try:
-        _request = request.json
         token = str(token)
-        conversation_token = str(_request['conversation_token'])
+        conversation_token = str(conversation_token)
         
         sessions = Sessions(ID = None, fk_user_ID = None, token = token, create_date = None, modify_date = None)
         conversations = Conversations(ID = None, conversation_token = conversation_token, fk_user_ID = None, create_date = None, modify_date = None)
