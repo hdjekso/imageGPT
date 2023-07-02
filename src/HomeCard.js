@@ -7,7 +7,7 @@ const HomeCard = ({msgID}) => {
 	//console.log("message ID: " + msgID);
 	var token = localStorage.getItem("token");
 	const navigate = useNavigate();
-	const [convo, setConvo] = useState([]);
+	//const [convo, setConvo] = useState([]);
 	const [isRetrieved, setIsRetrieved] = useState(false);
 
 	useEffect( () => {
@@ -20,25 +20,19 @@ const HomeCard = ({msgID}) => {
 
 	//retrieve specified convo from db using convo_id (key)
 	const fetchData = async () => {
-		let obj = {}
-		obj["conversation_token"] = msgID;
-		let myJSON = JSON.stringify(obj);
-		//const apiURL = 'http://127.0.0.1:5000/dialogues/retrieve/all/';
 		const local_token = token;
-		//console.log("concatenated url: " + `http://127.0.0.1:5000/dialogues/retrieve/all/${local_token}/${msgID}`);
-		fetch(`http://127.0.0.1:5000/dialogues/retrieve/all/${local_token}`, {
-				method: 'POST',
-				body: myJSON,
-				headers: {
-				'Content-type': 'application/json; charset=UTF-8'
-				}
-			})
+		//console.log(`http://127.0.0.1:5000/dialogues/retrieve/all/${local_token}/${msgID}`)
+		fetch(`http://127.0.0.1:5000/dialogues/retrieve/all/${local_token}/${msgID}`)
 			.then(response => response.json())
 			.then(data => {
-				console.log("raw convo data retrieved: " + data);
-				localStorage.setItem("convo", data);
-				setConvo(data);
+				console.log("raw convo data retrieved: " + JSON.stringify(data));
+				localStorage.setItem("convo", JSON.stringify(data));
+				localStorage.setItem("convoID", msgID);
+				//setConvo(data);
 				setIsRetrieved(true);
+				setTimeout(() => {
+					navigate("/Chat");
+				}, 0);
 
 			})
 			.catch(error => {
@@ -46,10 +40,10 @@ const HomeCard = ({msgID}) => {
 			});
 	};
 	
-	const handleOldQ = () =>{
-			fetchData();
-			navigate("/Chat");
-    }
+	const handleOldQ = async () =>{
+			await fetchData();
+			//navigate("/Chat");
+  }
     if (msgID !== ''){
         return ( 
             <Card 

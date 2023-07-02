@@ -32,12 +32,14 @@ const drawerWidth = 240;
 
 const apiKey = process.env.REACT_APP_GPT3_API_KEY;
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
-let conversation = [{ role: 'system', content: 'You are a helpful assistant.' }];
-const storedData = localStorage.getItem('convo');
+//const [conversation, setConversation] = [{ role: 'system', content: 'You are a helpful assistant.' }];
 //console.log(localStorage.getItem("token"));
 
-
 function Chat() {
+  const [conversation, setConversation] = useState([{ role: 'system', content: 'You are a helpful assistant.' }]);
+  const [convoID, setConvoID] = useState(null);
+  const [storedData, setStoredData] = useState(null);
+
   var token = localStorage.getItem("token");
   const [previewImage, setPreviewImage] = useState(null);
   //const [uploadedImage, setUploadedImage] = useState(null);
@@ -54,13 +56,53 @@ function Chat() {
   const [uniqueKey, setUniqueKey] = useState('');
 
   useEffect( () => {
-    if (storedData){
-      console.log(storedData);
-      conversation = [...conversation, ...storedData];
+    if (localStorage.getItem('convoID') != null){
+      setConvoID(localStorage.getItem('convoID'));
+      setUniqueKey(localStorage.getItem('convoID'));
+    }else{
+      let tokenObj = {};
+      tokenObj["token"] = token;
+      let tokenJSON = JSON.stringify(tokenObj);
+      console.log(tokenJSON);
+      //generate unique convo ID by calling db with session ID
+      fetch('http://127.0.0.1:5000/conversations/create', {
+        method: 'POST',
+        body: tokenJSON,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8' 
+        }
+      }).then(function (response) {
+        if (response.ok) {
+          return response.json(); 
+        }
+        return Promise.reject(response);
+      }).then(function (data) {
+        console.log(data);
+        setUniqueKey(data.conversation_token);
+      }).catch(function (error) {
+        console.warn('Something went wrong.', error);
+      });
+    }
+
+    if (localStorage.getItem('convo') != null){
+      setStoredData(localStorage.getItem('convo'));
+      console.log("storedData: " + JSON.stringify(storedData));
+    }
+  }, [])
+
+  useEffect( () => {
+    console.log("conversation changed: " + conversation);
+  }, [conversation])
+
+  useEffect( () => {
+    if (storedData){ // if there exists a stored old convo
+      console.log("stored convo exists");
+      //conversation = [...conversation, ...storedData];
+      setConversation(JSON.parse(storedData));
       console.log("concatenation done");
       console.log(conversation);
     }
-  })
+  }, [storedData])
   
   useEffect(() => {
     if (conversionComplete) {
@@ -68,53 +110,65 @@ function Chat() {
     }
   }, [conversionComplete]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("uniqueKey updated: " + uniqueKey);
     console.log("imgTxt updated: " + imgText);
     if( (file != null) ){
       convertText();
     }
-    let tokenObj = {};
-    tokenObj["token"] = token;
-    let tokenJSON = JSON.stringify(tokenObj);
-    console.log(tokenJSON);
-    fetch('http://127.0.0.1:5000/conversations/create', {
-      method: 'POST',
-      body: tokenJSON,
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8' 
-      }
-    }).then(function (response) {
-      if (response.ok) {
-        return response.json(); 
-      }
-      return Promise.reject(response);
-    }).then(function (data) {
-      console.log(data);
-      setUniqueKey(data.conversation_token);
-    }).catch(function (error) {
-      console.warn('Something went wrong.', error);
-    });
-  }, [])
+    if (convoID === null){ //if an old convo is not selected, generate a new convo ID
+      let tokenObj = {};
+      tokenObj["token"] = token;
+      let tokenJSON = JSON.stringify(tokenObj);
+      console.log(tokenJSON);
+      //generate unique convo ID by calling db with session ID
+      fetch('http://127.0.0.1:5000/conversations/create', {
+        method: 'POST',
+        body: tokenJSON,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8' 
+        }
+      }).then(function (response) {
+        if (response.ok) {
+          return response.json(); 
+        }
+        return Promise.reject(response);
+      }).then(function (data) {
+        console.log(data);
+        setUniqueKey(data.conversation_token);
+      }).catch(function (error) {
+        console.warn('Something went wrong.', error);
+      });
+    }else{ //set UniqueKey to convoID (old convo ID)
+      setUniqueKey(convoID);
+    }
+      
+  }, [])*/
 
   //passes messages twice at a time
   const handleMessage = async (content_, type_) => {
     setGenerating(true);
     
     //store user input & token (to be passed into db)
-    let convObj = {};
-    convObj["token"] = token;
+    let convObj = {}; //this will be passed into the db for storage
+    convObj["token"] = token; //session ID (for verification and user account identification)
     convObj["usr_content"] = content_; //{role: 'user', content: content_};
 
     //to be passed into the API
     console.log(content_);
-    conversation.push({role: 'user', content: content_});
+
+    //conversation.push({role: 'user', content: content_});
+    setConversation({...conversation, {role: 'user', content: content_}})
+    console.log(conversation);
     //setGenerating('true');
     let reply = await gptHandleMessage(conversation);
     reply = reply.substring(0, 1500); //trim api response
     //setGenerating('false');
     //console.log('Assistant:', reply);
-    conversation.push({role: 'assistant', content: reply});
+
+    //conversation.push({role: 'assistant', content: reply});
+    setConversation([...conversation, {role: 'assistant', content: reply}])
+    console.log(conversation);
 
     //update api response in convObj
     convObj["gpt_content"] = reply;//{role: 'assistant', content: reply};
@@ -122,6 +176,7 @@ function Chat() {
     let convJSON = JSON.stringify(convObj);
     console.log(convJSON);
 
+    //call the api, store the convo in the db
     fetch('http://127.0.0.1:5000/dialogues/create', {
       method: 'POST',
       body: convJSON,
@@ -318,6 +373,7 @@ function Chat() {
   
   const handleSignOut = ()=>{
     console.log("handleSignOut called");
+    setConversation([{ role: 'system', content: 'You are a helpful assistant.' }]); //reset conv object
     let signObj = {}
     signObj["token"] = token;
     let outJSON = JSON.stringify(signObj);
@@ -452,26 +508,18 @@ function Chat() {
             </Grid>
           </Grid>
 
-
-
-
-          {messages.map((message) => (
-            (message.type === "send" || message.type === "receive" || message.type === "imgTxt") && (
-
+          {Array.isArray(conversation) ? conversation.map((message) => (
+            /*(message.type === "send" || message.type === "receive" || message.type === "imgTxt") && (
               <div className={(message.type === "send" || message.type === "imgTxt")? "send" : "receive"} >
-
                 {message.content}
-
-
               </div>
-
+            )*/
+            (message.role === "user" || message.role === "assistant") && (
+              <div className={(message.role === "user") ? "send" : "receive"} >
+                {message.content}
+              </div>
             )
-
-
-
-
-
-          ))}
+          )) : "conversation is not an array"}
         </div>
         <Input handleMessage={handleMessage} isDisabled={generating}/>
       </Box>

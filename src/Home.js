@@ -12,8 +12,12 @@ function Home_() {
   const [oldIDs, setOldIDs] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const handleNewQ = () => {
-    navigate("/Chat");
+  const handleNewQ = async () => {
+    await localStorage.removeItem("convo");
+    await localStorage.removeItem("convoID");
+    setTimeout(() => {
+      navigate("/Chat");
+    }, 0);
   }
 
   const fetchData = async () => {
@@ -25,7 +29,7 @@ function Home_() {
         // Process the retrieved data
         setOldIDs(data.slice(-5)); //retrieve the last 5 elements of the array
         setIsLoaded(true);
-        //console.log(oldIDs);
+        //console.log(oldIDs[4]);
       })
       .catch(error => {
         console.error('Error occurred while fetching data:', error);
@@ -35,7 +39,7 @@ function Home_() {
   useEffect(() => {
     //console.log("localstorage token: " + token);
     fetchData();
-    console.log("oldIDs updated: " + oldIDs);
+    //console.log("oldIDs updated: " + oldIDs);
     //console.log("oldID 5: " + oldIDs[4]["conversation_token"]);
   }, []);
 
