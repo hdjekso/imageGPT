@@ -33,12 +33,14 @@ const drawerWidth = 240;
 const apiKey = process.env.REACT_APP_GPT3_API_KEY;
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
 let conversation = [{ role: 'system', content: 'You are a helpful assistant.' }];
-const storedData = localStorage.getItem('convo');
+//const storedData = localStorage.getItem('convo');
 //console.log(localStorage.getItem("token"));
 
 
 function Chat() {
   var token = localStorage.getItem("token");
+  const storedData = localStorage.getItem('convo');
+  const convoID = localStorage.getItem('convoID');
   const [previewImage, setPreviewImage] = useState(null);
   //const [uploadedImage, setUploadedImage] = useState(null);
   const [file, setFile] = useState(null);  // stores the image file
@@ -54,13 +56,36 @@ function Chat() {
   const [uniqueKey, setUniqueKey] = useState('');
 
   useEffect( () => {
-    if (storedData){
+    if (storedData != null){
       console.log(storedData);
-      conversation = [...conversation, ...storedData];
-      console.log("concatenation done");
+      conversation = JSON.parse(storedData);
+      console.log("restoration done");
       console.log(conversation);
+      setUniqueKey(convoID); //update convo ID to old one
+    }else{ // generate new convo ID if old chat not selected
+      let tokenObj = {};
+      tokenObj["token"] = token;
+      let tokenJSON = JSON.stringify(tokenObj);
+      console.log(tokenJSON);
+      fetch('http://127.0.0.1:5000/conversations/create', {
+        method: 'POST',
+        body: tokenJSON,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8' 
+        }
+      }).then(function (response) {
+        if (response.ok) {
+          return response.json(); 
+        }
+        return Promise.reject(response);
+      }).then(function (data) {
+        console.log(data);
+        setUniqueKey(data.conversation_token);
+      }).catch(function (error) {
+        console.warn('Something went wrong.', error);
+      });
     }
-  })
+  }, [])
   
   useEffect(() => {
     if (conversionComplete) {
@@ -68,13 +93,13 @@ function Chat() {
     }
   }, [conversionComplete]);
 
-  useEffect(() => {
+  useEffect(() => {  
     console.log("uniqueKey updated: " + uniqueKey);
     console.log("imgTxt updated: " + imgText);
     if( (file != null) ){
       convertText();
     }
-    let tokenObj = {};
+    /*let tokenObj = {};
     tokenObj["token"] = token;
     let tokenJSON = JSON.stringify(tokenObj);
     console.log(tokenJSON);
@@ -94,7 +119,7 @@ function Chat() {
       setUniqueKey(data.conversation_token);
     }).catch(function (error) {
       console.warn('Something went wrong.', error);
-    });
+    });*/
   }, [])
 
   //passes messages twice at a time

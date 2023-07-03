@@ -13,7 +13,11 @@ function Home_() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const handleNewQ = () => {
-    navigate("/Chat");
+    localStorage.removeItem("convo");
+		localStorage.removeItem("convoID");
+    setTimeout(() => {
+      navigate("/Chat");
+    }, 0);
   }
 
   const fetchData = async () => {
