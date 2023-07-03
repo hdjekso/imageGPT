@@ -32,7 +32,8 @@ const drawerWidth = 240;
 
 const apiKey = process.env.REACT_APP_GPT3_API_KEY;
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
-//const [conversation, setConversation] = [{ role: 'system', content: 'You are a helpful assistant.' }];
+let conversation = [{ role: 'system', content: 'You are a helpful assistant.' }];
+//const storedData = localStorage.getItem('convo');
 //console.log(localStorage.getItem("token"));
 
 function Chat() {
@@ -41,6 +42,8 @@ function Chat() {
   const [storedData, setStoredData] = useState(null);
 
   var token = localStorage.getItem("token");
+  const storedData = localStorage.getItem('convo');
+  const convoID = localStorage.getItem('convoID');
   const [previewImage, setPreviewImage] = useState(null);
   //const [uploadedImage, setUploadedImage] = useState(null);
   const [file, setFile] = useState(null);  // stores the image file
@@ -56,15 +59,18 @@ function Chat() {
   const [uniqueKey, setUniqueKey] = useState('');
 
   useEffect( () => {
-    if (localStorage.getItem('convoID') != null){
-      setConvoID(localStorage.getItem('convoID'));
-      setUniqueKey(localStorage.getItem('convoID'));
-    }else{
+    if (storedData != null){
+      console.log(storedData);
+      conversation = JSON.parse(storedData);
+      console.log("restoration done");
+      console.log(conversation);
+      setUniqueKey(convoID); //update convo ID to old one
+      updateMessages(conversation); //update the messages object using values in conversation
+    }else{ // generate new convo ID if old chat not selected
       let tokenObj = {};
       tokenObj["token"] = token;
       let tokenJSON = JSON.stringify(tokenObj);
       console.log(tokenJSON);
-      //generate unique convo ID by calling db with session ID
       fetch('http://127.0.0.1:5000/conversations/create', {
         method: 'POST',
         body: tokenJSON,
@@ -78,31 +84,13 @@ function Chat() {
         return Promise.reject(response);
       }).then(function (data) {
         console.log(data);
+        console.log("convo id generated once");
         setUniqueKey(data.conversation_token);
       }).catch(function (error) {
         console.warn('Something went wrong.', error);
       });
     }
-
-    if (localStorage.getItem('convo') != null){
-      setStoredData(localStorage.getItem('convo'));
-      console.log("storedData: " + JSON.stringify(storedData));
-    }
   }, [])
-
-  useEffect( () => {
-    console.log("conversation changed: " + conversation);
-  }, [conversation])
-
-  useEffect( () => {
-    if (storedData){ // if there exists a stored old convo
-      console.log("stored convo exists");
-      //conversation = [...conversation, ...storedData];
-      setConversation(JSON.parse(storedData));
-      console.log("concatenation done");
-      console.log(conversation);
-    }
-  }, [storedData])
   
   useEffect(() => {
     if (conversionComplete) {
@@ -110,40 +98,50 @@ function Chat() {
     }
   }, [conversionComplete]);
 
-  /*useEffect(() => {
+  useEffect(() => {  
     console.log("uniqueKey updated: " + uniqueKey);
     console.log("imgTxt updated: " + imgText);
     if( (file != null) ){
       convertText();
     }
-    if (convoID === null){ //if an old convo is not selected, generate a new convo ID
-      let tokenObj = {};
-      tokenObj["token"] = token;
-      let tokenJSON = JSON.stringify(tokenObj);
-      console.log(tokenJSON);
-      //generate unique convo ID by calling db with session ID
-      fetch('http://127.0.0.1:5000/conversations/create', {
-        method: 'POST',
-        body: tokenJSON,
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8' 
-        }
-      }).then(function (response) {
-        if (response.ok) {
-          return response.json(); 
-        }
-        return Promise.reject(response);
-      }).then(function (data) {
-        console.log(data);
-        setUniqueKey(data.conversation_token);
-      }).catch(function (error) {
-        console.warn('Something went wrong.', error);
-      });
-    }else{ //set UniqueKey to convoID (old convo ID)
-      setUniqueKey(convoID);
+    /*let tokenObj = {};
+    tokenObj["token"] = token;
+    let tokenJSON = JSON.stringify(tokenObj);
+    console.log(tokenJSON);
+    fetch('http://127.0.0.1:5000/conversations/create', {
+      method: 'POST',
+      body: tokenJSON,
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8' 
+      }
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json(); 
+      }
+      return Promise.reject(response);
+    }).then(function (data) {
+      console.log(data);
+      setUniqueKey(data.conversation_token);
+    }).catch(function (error) {
+      console.warn('Something went wrong.', error);
+    });*/
+  }, [])
+
+  const updateMessages = (conversation) => {
+    const filteredConversation = conversation.filter(
+      (message) => message.role === "user" || message.role === "assistant"
+    );
+    const newMessages = filteredConversation.map((message) => {
+      if (message.role === "user") {
+        return { content: message.content, type: "send" };
+      } else {
+        return { content: message.content, type: "receive" };
+      }
+    });
+    if (newMessages.length != 0) {
+      setMessages(newMessages);
     }
-      
-  }, [])*/
+  };
 
   //passes messages twice at a time
   const handleMessage = async (content_, type_) => {
@@ -203,80 +201,6 @@ function Chat() {
 
 
   }
-
-  //passes messages one by one
-  /*const handleMessage = async (content_, type_) => {
-    setGenerating(true);
-    
-    //pass user input & token in json format to db (single line of dialogue)
-    let userObj = {};
-    userObj["token"] = token;
-    userObj["key"] = uniqueKey;
-    userObj["role"] = "user";
-    userObj["content"] = content_;
-    let userJSON = JSON.stringify(userObj);
-    console.log(userJSON);
-
-    fetch('http://127.0.0.1:5000/messages/create', {
-      method: 'POST',
-      body: userJSON,
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8' 
-      }
-    }).then(function (response) {
-      if (response.ok) {
-        return response.json(); 
-      }
-      return Promise.reject(response);
-    }).then(function (data) {
-      console.log(data);
-    }).catch(function (error) {
-      console.warn('Something went wrong.', error);
-    });
-
-    //to be passed into the API
-    console.log(content_);
-    conversation.push({role: 'user', content: content_});
-    //setGenerating('true');
-    const reply = await gptHandleMessage(conversation);
-    //setGenerating('false');
-    //console.log('Assistant:', reply);
-    conversation.push({role: 'assistant', content: reply});
-
-    //pass api response into db
-    let apiObj = {};
-    apiObj["token"] = token;
-    apiObj["key"] = uniqueKey;
-    apiObj["role"] = "assistant";
-    apiObj["content"] = reply;
-    let apiJSON = JSON.stringify(apiObj);
-
-    fetch('http://127.0.0.1:5000/messages/create', {
-      method: 'POST',
-      body: apiJSON,
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8' 
-      }
-    }).then(function (response) {
-      if (response.ok) {
-        return response.json(); 
-      }
-      return Promise.reject(response);
-    }).then(function (data) {
-      console.log(data);
-    }).catch(function (error) {
-      console.warn('Something went wrong.', error);
-    });
-
-    //used to map out user/ API messages later
-    const newUserMessage = { content: content_, type: type_};
-    const newAPIMessage = { content: reply, type: "receive"};
-    setMessages([...messages, newUserMessage, newAPIMessage]);
-
-    setGenerating(false);
-
-
-  }*/
 
   const gptHandleMessage = async (conversation) => {
     //setGenerating('true');

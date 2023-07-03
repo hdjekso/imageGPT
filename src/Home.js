@@ -12,9 +12,9 @@ function Home_() {
   const [oldIDs, setOldIDs] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const handleNewQ = async () => {
-    await localStorage.removeItem("convo");
-    await localStorage.removeItem("convoID");
+  const handleNewQ = () => {
+    localStorage.removeItem("convo");
+		localStorage.removeItem("convoID");
     setTimeout(() => {
       navigate("/Chat");
     }, 0);
