@@ -47,8 +47,8 @@ CREATE TABLE `sessions` (
   `is_active` int(11) NOT NULL DEFAULT ''1'',
   `fk_user_ID` int(11) NOT NULL,
   `fk_conversation_ID` int(11) NOT NULL,
-  `usr_content` varchar(255) NOT NULL DEFAULT '''',
-  `gpt_content` varchar(255) NOT NULL DEFAULT '''',
+  `usr_content` varchar(1500) NOT NULL DEFAULT '''',
+  `gpt_content` varchar(1500) NOT NULL DEFAULT '''',
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modify_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`),
@@ -56,4 +56,4 @@ CREATE TABLE `sessions` (
   KEY `conversation_dialogue` (`fk_conversation_ID`),
   CONSTRAINT `conversation_dialogue` FOREIGN KEY (`fk_conversation_ID`) REFERENCES `conversations` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `user_input` FOREIGN KEY (`fk_user_ID`) REFERENCES `users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1'
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1'
