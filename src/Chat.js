@@ -62,6 +62,7 @@ function Chat() {
       console.log("restoration done");
       console.log(conversation);
       setUniqueKey(convoID); //update convo ID to old one
+      updateMessages(conversation); //update the messages object using values in conversation
     }else{ // generate new convo ID if old chat not selected
       let tokenObj = {};
       tokenObj["token"] = token;
@@ -80,6 +81,7 @@ function Chat() {
         return Promise.reject(response);
       }).then(function (data) {
         console.log(data);
+        console.log("convo id generated once");
         setUniqueKey(data.conversation_token);
       }).catch(function (error) {
         console.warn('Something went wrong.', error);
@@ -121,6 +123,22 @@ function Chat() {
       console.warn('Something went wrong.', error);
     });*/
   }, [])
+
+  const updateMessages = (conversation) => {
+    const filteredConversation = conversation.filter(
+      (message) => message.role === "user" || message.role === "assistant"
+    );
+    const newMessages = filteredConversation.map((message) => {
+      if (message.role === "user") {
+        return { content: message.content, type: "send" };
+      } else {
+        return { content: message.content, type: "receive" };
+      }
+    });
+    if (newMessages.length != 0) {
+      setMessages(newMessages);
+    }
+  };
 
   //passes messages twice at a time
   const handleMessage = async (content_, type_) => {
@@ -173,80 +191,6 @@ function Chat() {
 
 
   }
-
-  //passes messages one by one
-  /*const handleMessage = async (content_, type_) => {
-    setGenerating(true);
-    
-    //pass user input & token in json format to db (single line of dialogue)
-    let userObj = {};
-    userObj["token"] = token;
-    userObj["key"] = uniqueKey;
-    userObj["role"] = "user";
-    userObj["content"] = content_;
-    let userJSON = JSON.stringify(userObj);
-    console.log(userJSON);
-
-    fetch('http://127.0.0.1:5000/messages/create', {
-      method: 'POST',
-      body: userJSON,
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8' 
-      }
-    }).then(function (response) {
-      if (response.ok) {
-        return response.json(); 
-      }
-      return Promise.reject(response);
-    }).then(function (data) {
-      console.log(data);
-    }).catch(function (error) {
-      console.warn('Something went wrong.', error);
-    });
-
-    //to be passed into the API
-    console.log(content_);
-    conversation.push({role: 'user', content: content_});
-    //setGenerating('true');
-    const reply = await gptHandleMessage(conversation);
-    //setGenerating('false');
-    //console.log('Assistant:', reply);
-    conversation.push({role: 'assistant', content: reply});
-
-    //pass api response into db
-    let apiObj = {};
-    apiObj["token"] = token;
-    apiObj["key"] = uniqueKey;
-    apiObj["role"] = "assistant";
-    apiObj["content"] = reply;
-    let apiJSON = JSON.stringify(apiObj);
-
-    fetch('http://127.0.0.1:5000/messages/create', {
-      method: 'POST',
-      body: apiJSON,
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8' 
-      }
-    }).then(function (response) {
-      if (response.ok) {
-        return response.json(); 
-      }
-      return Promise.reject(response);
-    }).then(function (data) {
-      console.log(data);
-    }).catch(function (error) {
-      console.warn('Something went wrong.', error);
-    });
-
-    //used to map out user/ API messages later
-    const newUserMessage = { content: content_, type: type_};
-    const newAPIMessage = { content: reply, type: "receive"};
-    setMessages([...messages, newUserMessage, newAPIMessage]);
-
-    setGenerating(false);
-
-
-  }*/
 
   const gptHandleMessage = async (conversation) => {
     //setGenerating('true');
