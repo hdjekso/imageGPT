@@ -26,7 +26,8 @@
 
 }
 
-.form {
+
+.login-form {
     position: relative;
     z-index: 1;
     background: var(--darkBlue);
@@ -42,8 +43,27 @@
 
     /* Adjust the Form Background Color HERE! */
     background-position: center;
-
 }
+
+.register-form {
+    position: relative;
+    z-index: 1;
+    background: var(--darkBlue);
+    max-width: 300px;
+    min-height: 300px;
+    margin: 0 auto 100px;
+    padding: 45px;
+    text-align: center;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    border-radius: 25px;
+    background-image: url("../src/Assets/loginFormBG.png");
+    background-repeat: no-repeat;
+
+    /* Adjust the Form Background Color HERE! */
+    background-position: bottom;
+}
+
+
 
 .title h1 {
     font-family: 'Montserrat', sans-serif;
