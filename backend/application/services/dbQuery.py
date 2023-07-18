@@ -55,7 +55,8 @@ class DatabaseQuery:
         return False
 
     def retrieveAllConversations(self, db, sessions):
-        query = "SELECT `conversation_token` FROM `conversations` WHERE `fk_user_ID` = %s"
+        #query = "SELECT `conversation_token`, `ID` FROM `conversations` WHERE `fk_user_ID` = %s"
+        query = "SELECT conversations.conversation_token, dialogues.usr_content, dialogues.gpt_content FROM conversations INNER JOIN dialogues ON conversations.id = dialogues.fk_conversation_ID WHERE conversations.fk_user_ID = %s AND conversations.is_active = 1 AND dialogues.is_active = 1"
         args = [sessions.get_fk_user_ID()]
         tmp = db.fetchall(query, args)
         
@@ -64,11 +65,15 @@ class DatabaseQuery:
         for row in tmp:
             resp = {}
             resp["conversation_token"] = str(row[0])
+
+            first_dialogue = [{'role': 'user', 'content': row[1]}, {'role': 'assistant', 'content': row[2]}]
+            resp["first_dialogue"] = first_dialogue
+
             ret.append(resp)
 
         return ret
 
-    def retrieveAllConvos(self, db, conversations):
+    def retrieveAllDials(self, db, conversations):
         query = "SELECT `usr_content`, `gpt_content` FROM `dialogues` WHERE fk_user_ID = %s AND fk_conversation_ID = %s"
         args = [conversations.get_fk_user_ID(), conversations.get_ID()]
         tmp = db.fetchall(query, args)
