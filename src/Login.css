@@ -37,12 +37,19 @@
     text-align: center;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
     border-radius: 25px;
-    /* opacity: 0.9; */
+    background-image: url("../src/Assets/loginFormBG.png");
+    background-repeat: no-repeat;
+
+    /* Adjust the Form Background Color HERE! */
+    background-position: center;
+
 }
 
 .title h1 {
     font-family: 'Montserrat', sans-serif;
-    color: white;
+    font-weight: bold;
+    /* color: white; */
+    color: #000000;
 }
 
 .form input {
@@ -53,6 +60,7 @@
     box-sizing: border-box;
     font-size: 14px;
     border: 1px solid #4d4d4d;
+    opacity: 0.9;
 }
 
 .form input:first-of-type {
@@ -75,6 +83,7 @@
     cursor: pointer;
     background-color: var(--compYellow);
     border-radius: 15px;
+    opacity: 0.9;
     /* color: #FFFFFF; */
 }
 
@@ -132,6 +141,7 @@
 .form button:active,
 .form button:focus {
     background: var(--primYellow);
+    opacity: 1;
 }
 
 .form .message {
@@ -141,7 +151,9 @@
 }
 
 .form .message a {
-    color: #ffe100;
+    /* color: #ffe100; */
+
+    color: blueviolet;
     text-decoration: none;
 }
 
