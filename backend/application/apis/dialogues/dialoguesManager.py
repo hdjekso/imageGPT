@@ -53,7 +53,7 @@ class Manager:
             else:
                 return make_response(jsonify({'description': 'Invalid conversation token'}), 8)
 
-            res = dbQuery.retrieveAllConvos(db, conversations)
+            res = dbQuery.retrieveAllDials(db, conversations)
             res = make_response(jsonify(res), 200)
 
             db.close()
