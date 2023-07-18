@@ -1,8 +1,10 @@
-import { Button, Grid, Typography, Stack, Container } from "@mui/material";
+import { Carousel } from 'react-responsive-carousel';
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { useNavigate } from "react-router-dom";
 import HomeAppbar from "./HomeAppbar";
 import HomeCard from "./HomeCard";
 import React, { useEffect, useState } from 'react';
+import "./Home.css"
 // import axios from 'axios';
 
 function Home_() {
@@ -14,7 +16,7 @@ function Home_() {
 
   const handleNewQ = () => {
     localStorage.removeItem("convo");
-		localStorage.removeItem("convoID");
+    localStorage.removeItem("convoID");
     setTimeout(() => {
       navigate("/Chat");
     }, 0);
@@ -44,67 +46,32 @@ function Home_() {
   }, []);
 
   return (
-    <Grid sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      backgroundColor: '#99C0FB',
-      width: '100vw',
-      height: '100vh'
-    }}>
+    <div className="home-page">
       <HomeAppbar />
-      <Container sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%'
-      }}>
-        <Button
-          onClick={handleNewQ}
-          variant='solid'
-          sx={{
-            marginTop: '40px',
-            padding: '10px 20px',
-            fontSize: '25px',
-            backgroundColor: '#26487A',
-            fontWeight: 'bold',
-            color: 'white',
-            border: '2px solid #26487A',
-            borderRadius: '15px',
-            '&:hover': {
-              border: '2px solid #26487A',
-              backgroundColor: 'white',
-              color: '#26487A',
-              cursor: 'default'
-            }
-          }}>
-          Start a new question
-        </Button>
+      <div className="container">
+        <button className="StartNewQuest" onClick={handleNewQ}> + </button>
+        <h2>Previous Chat</h2>
+        <div className="previous-chat">
+          <div className="previous-chat-list">
+            <Carousel className="chatCaro">
+              {isLoaded && oldIDs.map((oldID, index) => (
+                <div key={index}>
+                  <HomeCard msgID={oldID ? oldID["conversation_token"] : 'loading...'} />
+                </div>
+              ))}
+            </Carousel>
+            {/* <HomeCard msgID={isLoaded && oldIDs[4] ? oldIDs[4]["conversation_token"] : 'loading...'} />
+            <HomeCard msgID={isLoaded && oldIDs[3] ? oldIDs[3]["conversation_token"] : 'loading...'} />
+            <HomeCard msgID={isLoaded && oldIDs[2] ? oldIDs[2]["conversation_token"] : 'loading...'} />
+            <HomeCard msgID={isLoaded && oldIDs[1] ? oldIDs[1]["conversation_token"] : 'loading...'} />
+            <HomeCard msgID={isLoaded && oldIDs[0] ? oldIDs[0]["conversation_token"] : 'loading...'} /> */}
+          </div>
 
-        <Typography
-          fontSize={'20px'}
-          fontWeight={'bold'}
-          color={'black'}
-          marginBottom={'20px'}
-          marginTop={'40px'}>
-          Previous chat
-        </Typography>
+        </div>
+      </div>
+    </div>
 
-        <Stack spacing={2} sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%'
-        }}>
-          <HomeCard msgID={isLoaded? oldIDs[4]["conversation_token"] : 'loading...'}/>
-          <HomeCard msgID={isLoaded? oldIDs[3]["conversation_token"] : 'loading...'}/>
-          <HomeCard msgID={isLoaded? oldIDs[2]["conversation_token"] : 'loading...'}/>
-          <HomeCard msgID={isLoaded? oldIDs[1]["conversation_token"] : 'loading...'}/>
-          <HomeCard msgID={isLoaded? oldIDs[0]["conversation_token"] : 'loading...'}/>
-          
-        </Stack>
-      </Container>
-    </Grid>
+
 
   );
 }

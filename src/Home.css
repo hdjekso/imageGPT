@@ -1,0 +1,47 @@
+.home-page {
+    background: hsla(319, 82%, 52%, 1);
+
+    background: linear-gradient(to right, rgb(233, 153, 253) 0%, hsla(197, 61%, 83%, 1) 100%);
+
+    background: -moz-linear-gradient(to right, rgb(237, 134, 243) 0%, hsla(197, 61%, 83%, 1) 100%);
+
+    background: -webkit-linear-gradient(to right, rgb(231, 173, 82) 0%, hsla(197, 61%, 83%, 1) 100%);
+
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#E91FA8", endColorstr="#B9DFEE", GradientType=1);
+
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-color: aliceblue;
+    width: 80vw;
+    height: 80vw;
+    border-radius: 50%;
+    overflow: auto;
+}
+
+.StartNewQuest {
+    width: 10vw;
+    height: 10vw;
+    border-radius: 50%;
+    background-color: yellow;
+
+    cursor: pointer;
+}
+
+.previous-chat-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.chatCaro{
+    border-radius: 50%;
+}
