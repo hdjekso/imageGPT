@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import {useState, useEffect} from 'react';
 
 const HomeCard = ({msgID}) => {
-	//console.log("message ID: " + msgID);
 	var token = localStorage.getItem("token");
+	const [title, setTitle] = useState('loading...');
 	const navigate = useNavigate();
 	//const [convo, setConvo] = useState([]);
 	const [isRetrieved, setIsRetrieved] = useState(false);
@@ -18,16 +18,25 @@ const HomeCard = ({msgID}) => {
 			}
 	}, []);
 
+	useEffect( () => {
+		if (msgID !== "loading..."){
+			const rawtitle = msgID["first_dialogue"][0].content;
+			const capitalized = rawtitle.charAt(0).toUpperCase() + rawtitle.slice(1);
+			console.log(capitalized)
+			setTitle(capitalized);
+		}
+}, [msgID]);
+
 	//retrieve specified convo from db using convo_id (key)
 	const fetchData = async () => {
 		const local_token = token;
 		//console.log(`http://127.0.0.1:5000/dialogues/retrieve/all/${local_token}/${msgID}`)
-		fetch(`http://127.0.0.1:5000/dialogues/retrieve/all/${local_token}/${msgID}`)
+		fetch(`http://127.0.0.1:5000/dialogues/retrieve/all/${local_token}/${msgID["conversation_token"]}`)
 			.then(response => response.json())
 			.then(data => {
 				console.log("raw convo data retrieved: " + JSON.stringify(data));
 				localStorage.setItem("convo", JSON.stringify(data));
-				localStorage.setItem("convoID", msgID);
+				localStorage.setItem("convoID", msgID["conversation_token"]);
 				//setConvo(data);
 				setIsRetrieved(true);
 				setTimeout(() => {
@@ -44,7 +53,7 @@ const HomeCard = ({msgID}) => {
 			await fetchData();
 			//navigate("/Chat");
   }
-    if (msgID !== ''){
+    if (msgID["conversation_token"] !== ''){
         return ( 
             <Card 
             variant="outlined" 
@@ -64,7 +73,7 @@ const HomeCard = ({msgID}) => {
                 <Typography
                  fontSize={'20px'}
                  fontWeight={'550'}>
-                    {msgID}
+                    {title}
                 </Typography>
                 </CardContent>
             </Card>

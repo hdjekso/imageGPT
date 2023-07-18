@@ -27,9 +27,24 @@ function Home_() {
       .then(response => response.json())
       .then(data => {
         // Process the retrieved data
-        setOldIDs(data.slice(-5)); //retrieve the last 5 elements of the array
+        /*setOldIDs(data.slice(-5)); //retrieve the last 5 elements of the array
         setIsLoaded(true);
-        //console.log(oldIDs);
+        console.log((oldIDs[4]["first_dialogue"]).length);*/
+
+        let newArray = [];
+        let i = data.length - 1;
+        let count = 0;
+        while (count < 5 && i >= 0) {
+          if ((data[i]["first_dialogue"]).length !== 0){
+            console.log(data[i]["first_dialogue"]);
+            newArray = [...newArray, data[i]];
+            --i;
+            count++;
+          }
+        }
+        setOldIDs(newArray);
+        console.log(oldIDs);
+        setIsLoaded(true);
       })
       .catch(error => {
         console.error('Error occurred while fetching data:', error);
@@ -96,11 +111,11 @@ function Home_() {
           alignItems: 'center',
           width: '100%'
         }}>
-          <HomeCard msgID={isLoaded? oldIDs[4]["conversation_token"] : 'loading...'}/>
-          <HomeCard msgID={isLoaded? oldIDs[3]["conversation_token"] : 'loading...'}/>
-          <HomeCard msgID={isLoaded? oldIDs[2]["conversation_token"] : 'loading...'}/>
-          <HomeCard msgID={isLoaded? oldIDs[1]["conversation_token"] : 'loading...'}/>
-          <HomeCard msgID={isLoaded? oldIDs[0]["conversation_token"] : 'loading...'}/>
+          <HomeCard msgID={isLoaded? oldIDs[0] : 'loading...'}/>
+          <HomeCard msgID={isLoaded? oldIDs[1] : 'loading...'}/>
+          <HomeCard msgID={isLoaded? oldIDs[2] : 'loading...'}/>
+          <HomeCard msgID={isLoaded? oldIDs[3] : 'loading...'}/>
+          <HomeCard msgID={isLoaded? oldIDs[4] : 'loading...'}/>
           
         </Stack>
       </Container>
