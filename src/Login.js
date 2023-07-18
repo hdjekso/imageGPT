@@ -187,6 +187,7 @@ const Login = () => {
 
   return (
     <div className="login-page">
+      <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet"></link>
       <div className="form">
         <div className={showLoginForm ? "login-form visible" : "login-form"}>
 
@@ -199,10 +200,10 @@ const Login = () => {
             <input className="LogPass" type="password" placeholder="Password" value={Password}
               onChange={(event) => { setPassword(event.target.value) }} />
             {/* <button className="LoginButton" type="submit" onClick={attemptSignIn}>Sign In</button> */}
-            <button className={`LoginButton ${loginFailed ? 'failed' : ''}`} type="submit">Sign In</button>
+            <button className={`LoginButton ${loginFailed ? 'failed' : ''}`} type="submit">Log In</button>
             <p className={`LoginFailedMSG ${loginFailed ? 'failed' : ''}`}>Sign In Failed, Please try again.</p>
-            <button onClick={nextPage}> Skip to next page</button>
-            <div onClick={switchLoginRegister} className="message">Not Registered? <a href="#">Create a new account!</a></div>
+            {/* <button onClick={nextPage}> Skip to next page</button> */}
+            <div onClick={switchLoginRegister} className="message">Not Signed Up? <a href="#">Create a new account!</a></div>
           </form>
 
 
@@ -227,10 +228,10 @@ const Login = () => {
               onChange={(event) => {setRegPassValid(event.target.value)}}/>*/}
 
             {/* <button className="RegButton" type="submit">Register</button> */}
-            <button className={`RegButton ${regFailed ? 'failed' : ''}`} type="submit">Register</button>
+            <button className={`RegButton ${regFailed ? 'failed' : ''}`} type="submit">Sign Up</button>
             <p className={`RegFailedMSG ${regFailed ? 'failed' : ''}`}>Registration Failed, {errorMessage}</p>
           </form>
-          <div onClick={switchLoginRegister} className="message">Already Registered? <a href="#">Login!</a></div>
+          <div onClick={switchLoginRegister} className="message">Already Signed Up? <a href="#">Login!</a></div>
 
         </div>
 
