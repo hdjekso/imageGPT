@@ -14,7 +14,7 @@ function Home_() {
 
   const handleNewQ = () => {
     localStorage.removeItem("convo");
-		localStorage.removeItem("convoID");
+    localStorage.removeItem("convoID");
     setTimeout(() => {
       navigate("/Chat");
     }, 0);
@@ -35,7 +35,7 @@ function Home_() {
         let i = data.length - 1;
         let count = 0;
         while (count < 5 && i >= 0) {
-          if ((data[i]["first_dialogue"]).length !== 0){
+          if ((data[i]["first_dialogue"]).length !== 0) {
             console.log(data[i]["first_dialogue"]);
             newArray = [...newArray, data[i]];
             --i;
@@ -111,12 +111,13 @@ function Home_() {
           alignItems: 'center',
           width: '100%'
         }}>
-          <HomeCard msgID={isLoaded? oldIDs[0] : 'loading...'}/>
-          <HomeCard msgID={isLoaded? oldIDs[1] : 'loading...'}/>
-          <HomeCard msgID={isLoaded? oldIDs[2] : 'loading...'}/>
-          <HomeCard msgID={isLoaded? oldIDs[3] : 'loading...'}/>
-          <HomeCard msgID={isLoaded? oldIDs[4] : 'loading...'}/>
-          
+          <HomeCard msgID={isLoaded && oldIDs[0] ? oldIDs[0] : 'loading...'} />
+          <HomeCard msgID={isLoaded && oldIDs[1] ? oldIDs[1] : 'loading...'} />
+          <HomeCard msgID={isLoaded && oldIDs[2] ? oldIDs[2] : 'loading...'} />
+          <HomeCard msgID={isLoaded && oldIDs[3] ? oldIDs[3] : 'loading...'} />
+          <HomeCard msgID={isLoaded && oldIDs[4] ? oldIDs[4] : 'loading...'} />
+
+
         </Stack>
       </Container>
     </Grid>

@@ -1,7 +1,11 @@
 import * as React from 'react';
 import Input from "./Input.js";
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight, faUpload } from '@fortawesome/free-solid-svg-icons';
+
 import { Button, Card, CardHeader, Grid, TextField, Typography } from "@mui/material";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -55,15 +59,15 @@ function Chat() {
   const [generating, setGenerating] = useState(false); // set the state of the API: whether it is generating a response or not
   const [uniqueKey, setUniqueKey] = useState('');
 
-  useEffect( () => {
-    if (storedData != null){
+  useEffect(() => {
+    if (storedData != null) {
       console.log(storedData);
       conversation = JSON.parse(storedData);
       console.log("restoration done");
       console.log(conversation);
       setUniqueKey(convoID); //update convo ID to old one
       updateMessages(conversation); //update the messages object using values in conversation
-    }else{ // generate new convo ID if old chat not selected
+    } else { // generate new convo ID if old chat not selected
       let tokenObj = {};
       tokenObj["token"] = token;
       let tokenJSON = JSON.stringify(tokenObj);
@@ -72,11 +76,11 @@ function Chat() {
         method: 'POST',
         body: tokenJSON,
         headers: {
-          'Content-type': 'application/json; charset=UTF-8' 
+          'Content-type': 'application/json; charset=UTF-8'
         }
       }).then(function (response) {
         if (response.ok) {
-          return response.json(); 
+          return response.json();
         }
         return Promise.reject(response);
       }).then(function (data) {
@@ -88,17 +92,17 @@ function Chat() {
       });
     }
   }, [])
-  
+
   useEffect(() => {
     if (conversionComplete) {
       handleMessage(imgText, 'imgTxt');
     }
   }, [conversionComplete]);
 
-  useEffect(() => {  
+  useEffect(() => {
     console.log("uniqueKey updated: " + uniqueKey);
     console.log("imgTxt updated: " + imgText);
-    if( (file != null) ){
+    if ((file != null)) {
       convertText();
     }
     /*let tokenObj = {};
@@ -143,7 +147,7 @@ function Chat() {
   //passes messages twice at a time
   const handleMessage = async (content_, type_) => {
     setGenerating(true);
-    
+
     //store user input & token (to be passed into db)
     let convObj = {};
     convObj["token"] = token;
@@ -151,13 +155,13 @@ function Chat() {
 
     //to be passed into the API
     console.log(content_);
-    conversation.push({role: 'user', content: content_});
+    conversation.push({ role: 'user', content: content_ });
     //setGenerating('true');
     let reply = await gptHandleMessage(conversation);
     reply = reply.substring(0, 1500); //trim api response
     //setGenerating('false');
     //console.log('Assistant:', reply);
-    conversation.push({role: 'assistant', content: reply});
+    conversation.push({ role: 'assistant', content: reply });
 
     //update api response in convObj
     convObj["gpt_content"] = reply;//{role: 'assistant', content: reply};
@@ -169,11 +173,11 @@ function Chat() {
       method: 'POST',
       body: convJSON,
       headers: {
-        'Content-type': 'application/json; charset=UTF-8' 
+        'Content-type': 'application/json; charset=UTF-8'
       }
     }).then(function (response) {
       if (response.ok) {
-        return response.json(); 
+        return response.json();
       }
       return Promise.reject(response);
     }).then(function (data) {
@@ -183,8 +187,8 @@ function Chat() {
     });
 
     //used to map out user/ API messages later
-    const newUserMessage = { content: content_, type: type_};
-    const newAPIMessage = { content: reply, type: "receive"};
+    const newUserMessage = { content: content_, type: type_ };
+    const newAPIMessage = { content: reply, type: "receive" };
     setMessages([...messages, newUserMessage, newAPIMessage]);
 
     setGenerating(false);
@@ -235,18 +239,18 @@ function Chat() {
       console.log(text);
       setImgText(text);
       setConversionComplete(true);
-      
+
       // if (text != " "){
       //   setImgText(text);
       //   console.log("text processed");
       // } else{
       //   console.log("text unable to be processed");
       // }
-      
+
       await worker.terminate();
-  })();
+    })();
   };
-  
+
 
   const handleSelectImage = (event) => {
     setFile(event.target.files[0]);
@@ -284,13 +288,13 @@ function Chat() {
       console.log("Image conversion is not yet complete.");
     }*/
   }
-  
-  const handleSignOut = ()=>{
+
+  const handleSignOut = () => {
     console.log("handleSignOut called");
     let signObj = {}
     signObj["token"] = token;
     let outJSON = JSON.stringify(signObj);
-    
+
     //make a post request to disable the session ID/ token
     fetch('http://127.0.0.1:5000/sessions/remove', {
       method: 'POST',
@@ -317,7 +321,7 @@ function Chat() {
     });
 
     navigate('/');
-}
+  }
   const navigateHome = () => {
     setMessages([]); // reset messages  
     navigate('/Home');
@@ -390,7 +394,6 @@ function Chat() {
         sx={{ flexGrow: 1, bgcolor: '#99C0FB', p: 3, pl: 4.5, pr: 0 }}
       >
         <div className="content">
-          {/*<Toolbar />*/}
           <Grid container spacing={2} sx={{ mt: 2 }} justifyContent="center" direction="column" alignItems="center">
             <Grid item>
               {!previewImage && <Card sx={{
@@ -407,16 +410,12 @@ function Chat() {
                 </label>
               </Card>}
             </Grid>
-            {/*{previewImage && <Grid item md={4} xs={12} sx={{
-            }}>
-              <Button onClick={convertText}>Convert to Text</Button>
-            </Grid>}*/}
             <Grid item>
               {previewImage && <img className='preview-image' src={previewImage} alt="uploaded" />}
             </Grid>
             <Grid item mb={5}>
-              {previewImage && <Button sx={{ marginRight: '12.3vw', }}  onClick={handleRemoveImg}>Remove</Button>}
-              {previewImage && !uploaded && <Button sx={{ marginLeft: '12.3vw', }}  onClick={handleUploadImage}>Upload</Button>}
+              {previewImage && <Button sx={{ marginRight: '12.3vw', }} onClick={handleRemoveImg}>Remove</Button>}
+              {previewImage && !uploaded && <Button sx={{ marginLeft: '12.3vw', }} onClick={handleUploadImage}>Upload</Button>}
               {uploaded ? <Button sx={{ marginLeft: '9vw', }} disabled>Upload Complete</Button> : ''}
             </Grid>
           </Grid>
@@ -427,22 +426,29 @@ function Chat() {
           {messages.map((message) => (
             (message.type === "send" || message.type === "receive" || message.type === "imgTxt") && (
 
-              <div className={(message.type === "send" || message.type === "imgTxt")? "send" : "receive"} >
+              <div className={(message.type === "send" || message.type === "imgTxt") ? "send" : "receive"} >
 
                 {message.content}
 
-
               </div>
-
             )
-
-
-
-
 
           ))}
         </div>
-        <Input handleMessage={handleMessage} isDisabled={generating}/>
+        <Input handleMessage={handleMessage} isDisabled={generating} />
+        <div className="input-container">
+          <div className="chatMSGWindow">
+            <input className="textboxChat" type="text" placeholder="Type a message..." />
+            <div className="button-container">
+              <button className="BTNuploadIMG">
+                <FontAwesomeIcon icon={faUpload} />
+              </button>
+              <button className="BTNsubmitQuest">
+                <FontAwesomeIcon icon={faArrowRight} />
+              </button>
+            </div>
+          </div>
+        </div>
       </Box>
     </Box>
   );
