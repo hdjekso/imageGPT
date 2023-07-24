@@ -1,10 +1,9 @@
 import * as React from 'react';
 import Input from "./Input.js";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faUpload } from '@fortawesome/free-solid-svg-icons';
 
-import { Button, Card, CardHeader, Grid, TextField, Typography } from "@mui/material";
+
+import { Button, Card, Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
@@ -13,24 +12,15 @@ import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import Icon from '@mui/material/Icon';
-import MailIcon from '@mui/icons-material/Mail';
 import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
-import Avatar from '@mui/material/Avatar';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import "./Chat.css";
 import "./Input.css";
-import { Cloud } from '@mui/icons-material';
 import Tesseract from 'tesseract.js';
-import { createWorker } from 'tesseract.js';
-import { v4 as uuid } from 'uuid';
 
 const drawerWidth = 240;
 
@@ -58,6 +48,7 @@ function Chat() {
 
   const [generating, setGenerating] = useState(false); // set the state of the API: whether it is generating a response or not
   const [uniqueKey, setUniqueKey] = useState('');
+
 
   useEffect(() => {
     if (storedData != null) {
@@ -97,7 +88,7 @@ function Chat() {
     if (conversionComplete) {
       handleMessage(imgText, 'imgTxt');
     }
-  }, [conversionComplete]);
+  }, [conversionComplete, imgText]);
 
   useEffect(() => {
     console.log("uniqueKey updated: " + uniqueKey);
@@ -105,27 +96,7 @@ function Chat() {
     if ((file != null)) {
       convertText();
     }
-    /*let tokenObj = {};
-    tokenObj["token"] = token;
-    let tokenJSON = JSON.stringify(tokenObj);
-    console.log(tokenJSON);
-    fetch('http://127.0.0.1:5000/conversations/create', {
-      method: 'POST',
-      body: tokenJSON,
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8' 
-      }
-    }).then(function (response) {
-      if (response.ok) {
-        return response.json(); 
-      }
-      return Promise.reject(response);
-    }).then(function (data) {
-      console.log(data);
-      setUniqueKey(data.conversation_token);
-    }).catch(function (error) {
-      console.warn('Something went wrong.', error);
-    });*/
+
   }, [])
 
   const updateMessages = (conversation) => {
@@ -139,62 +110,11 @@ function Chat() {
         return { content: message.content, type: "receive" };
       }
     });
-    if (newMessages.length != 0) {
+    if (newMessages.length !== 0) {
       setMessages(newMessages);
     }
   };
 
-  //passes messages twice at a time
-  const handleMessage = async (content_, type_) => {
-    setGenerating(true);
-
-    //store user input & token (to be passed into db)
-    let convObj = {};
-    convObj["token"] = token;
-    convObj["usr_content"] = content_; //{role: 'user', content: content_};
-
-    //to be passed into the API
-    console.log(content_);
-    conversation.push({ role: 'user', content: content_ });
-    //setGenerating('true');
-    let reply = await gptHandleMessage(conversation);
-    reply = reply.substring(0, 1500); //trim api response
-    //setGenerating('false');
-    //console.log('Assistant:', reply);
-    conversation.push({ role: 'assistant', content: reply });
-
-    //update api response in convObj
-    convObj["gpt_content"] = reply;//{role: 'assistant', content: reply};
-    convObj["conversation_token"] = uniqueKey;
-    let convJSON = JSON.stringify(convObj);
-    console.log(convJSON);
-
-    fetch('http://127.0.0.1:5000/dialogues/create', {
-      method: 'POST',
-      body: convJSON,
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8'
-      }
-    }).then(function (response) {
-      if (response.ok) {
-        return response.json();
-      }
-      return Promise.reject(response);
-    }).then(function (data) {
-      console.log(data);
-    }).catch(function (error) {
-      console.warn('Something went wrong.', error);
-    });
-
-    //used to map out user/ API messages later
-    const newUserMessage = { content: content_, type: type_ };
-    const newAPIMessage = { content: reply, type: "receive" };
-    setMessages([...messages, newUserMessage, newAPIMessage]);
-
-    setGenerating(false);
-
-
-  }
 
   const gptHandleMessage = async (conversation) => {
     //setGenerating('true');
@@ -220,13 +140,12 @@ function Chat() {
 
       // Retrieve the model's response
       const reply = data.choices[0].message.content;
-      console.log(reply);
+      console.log("GPT REPLY:" + reply);
       return reply;
 
     } catch (error) {
       console.error('Error:', error);
     }
-    //setGenerating('false');
   };
 
   //Convert image to text (from convert_text branch)
@@ -239,14 +158,6 @@ function Chat() {
       console.log(text);
       setImgText(text);
       setConversionComplete(true);
-
-      // if (text != " "){
-      //   setImgText(text);
-      //   console.log("text processed");
-      // } else{
-      //   console.log("text unable to be processed");
-      // }
-
       await worker.terminate();
     })();
   };
@@ -279,14 +190,6 @@ function Chat() {
     const link = URL.createObjectURL(file);
     setUploaded(true);
     setImageUrl(link);
-    //console.log("image converted, text is: " + imgText);
-    //handleMessage(imgText, "imgTxt");
-
-    /*if (conversionComplete) {
-      handleMessage(imgText, "imgTxt");
-    } else {
-      console.log("Image conversion is not yet complete.");
-    }*/
   }
 
   const handleSignOut = () => {
@@ -341,9 +244,54 @@ function Chat() {
     }
   ]
 
-  //section that allows the chatGPT API to process user input
-  const [userInput, setUserInput] = useState('');
-  //const [chatLog, setChatLog] = useState([]);
+  //passes messages twice at a time
+  const handleMessage = async (content_, type_) => {
+    setGenerating(true);
+
+    //store user input & token (to be passed into db)
+    let convObj = {};
+    convObj["token"] = token;
+    convObj["usr_content"] = content_; //{role: 'user', content: content_};
+
+    //to be passed into the API
+    console.log("content:" + content_);
+    conversation.push({ role: 'user', content: content_ });
+    let reply = await gptHandleMessage(conversation);
+    reply = reply.substring(0, 1500); //trim api response
+    conversation.push({ role: 'assistant', content: reply });
+
+    //update api response in convObj
+    convObj["gpt_content"] = reply;
+    convObj["conversation_token"] = uniqueKey;
+    let convJSON = JSON.stringify(convObj);
+    console.log("JSON:" + convJSON);
+
+    fetch('http://127.0.0.1:5000/dialogues/create', {
+      method: 'POST',
+      body: convJSON,
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json();
+      }
+      return Promise.reject(response);
+    }).then(function (data) {
+      console.log(data);
+    }).catch(function (error) {
+      console.warn('Something went wrong.', error);
+    });
+
+    //used to map out user/ API messages later
+    const newUserMessage = { content: content_, type: type_ };
+    const newAPIMessage = { content: reply, type: "receive" };
+    setMessages([...messages, newUserMessage, newAPIMessage]);
+
+    setGenerating(false);
+
+
+  }
 
 
   return (
@@ -436,19 +384,7 @@ function Chat() {
           ))}
         </div>
         <Input handleMessage={handleMessage} isDisabled={generating} />
-        <div className="input-container">
-          <div className="chatMSGWindow">
-            <input className="textboxChat" type="text" placeholder="Type a message..." />
-            <div className="button-container">
-              <button className="BTNuploadIMG">
-                <FontAwesomeIcon icon={faUpload} />
-              </button>
-              <button className="BTNsubmitQuest">
-                <FontAwesomeIcon icon={faArrowRight} />
-              </button>
-            </div>
-          </div>
-        </div>
+
       </Box>
     </Box>
   );
