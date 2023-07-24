@@ -26,7 +26,7 @@ const drawerWidth = 240;
 
 const apiKey = process.env.REACT_APP_GPT3_API_KEY;
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
-let conversation = [{ role: 'system', content: 'You are a helpful assistant.' }];
+let conversation = [{ role: 'system', content: 'You are a helpful assistant.', }];
 //const storedData = localStorage.getItem('convo');
 //console.log(localStorage.getItem("token"));
 
@@ -310,7 +310,7 @@ function Chat() {
         variant="permanent"
         anchor="left"
       >
-        <AppBar
+        {/* <AppBar
           position="relative"
           sx={{ width: drawerWidth + 9, height: 80 }}
           style={{ background: '#26487A' }}
@@ -320,10 +320,10 @@ function Chat() {
               <Box sx={{ fontWeight: 'bold', mt: 1.5 }}>ImageGPT</Box>
             </Typography>
           </Toolbar>
-        </AppBar>
+        </AppBar> */}
 
         {/*output list items */}
-        <List>
+        {/* <List>
           {menuItems.map(item => (
             <ListItem button divider
               key={item.text}
@@ -334,15 +334,26 @@ function Chat() {
               <ListItemText primary={item.text} />
             </ListItem>
           ))}
-        </List>
+        </List> */}
       </Drawer>
-      <Box
-        component="main"
-        height="100vh"
-        sx={{ flexGrow: 1, bgcolor: '#99C0FB', p: 3, pl: 4.5, pr: 0 }}
-      >
+
+      <div className="main-container">
         <div className="content">
-          <Grid container spacing={2} sx={{ mt: 2 }} justifyContent="center" direction="column" alignItems="center">
+          <div className="bg-container">
+            <ul class="circles">
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+          </div>
+          {/* <Grid container spacing={2} sx={{ mt: 2 }} justifyContent="center" direction="column" alignItems="center">
             <Grid item>
               {!previewImage && <Card sx={{
                 backgroundColor: "#26487A",
@@ -366,7 +377,7 @@ function Chat() {
               {previewImage && !uploaded && <Button sx={{ marginLeft: '12.3vw', }} onClick={handleUploadImage}>Upload</Button>}
               {uploaded ? <Button sx={{ marginLeft: '9vw', }} disabled>Upload Complete</Button> : ''}
             </Grid>
-          </Grid>
+          </Grid> */}
 
 
 
@@ -384,8 +395,7 @@ function Chat() {
           ))}
         </div>
         <Input handleMessage={handleMessage} isDisabled={generating} />
-
-      </Box>
+      </div>
     </Box>
   );
 }
