@@ -393,8 +393,12 @@ function Chat() {
             )
 
           ))}
+
+
         </div>
+
         <Input handleMessage={handleMessage} isDisabled={generating} />
+
       </div>
     </Box>
   );

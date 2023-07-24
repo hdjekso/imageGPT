@@ -1,8 +1,11 @@
 .input-container {
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-
+  z-index: 3;
+  width: 80%;
+  bottom: 15px;
 }
 
 .chatMSGWindow {
