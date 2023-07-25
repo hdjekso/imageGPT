@@ -275,21 +275,6 @@ function Chat() {
   }
 
   const navigate = useNavigate();
-  const menuItems = [
-    {
-      text: 'Home',
-      icon: <HomeIcon color="primary" />,
-      onClick: () => navigateHome(),
-    },
-    {
-      text: "Sign Out",
-      icon: <LogoutIcon color="primary" />,
-      onClick: () => handleSignOut(),
-    }
-  ]
-
-
-
 
   return (
     <div className="main-container">
@@ -308,53 +293,11 @@ function Chat() {
         </ul>
       </div>
 
-      {/* <Box sx={{ display: 'flex' }}> */}
-      {/* <CssBaseline /> */}
-      {/* <Drawer
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              width: drawerWidth + 10,
-              boxSizing: 'border-box',
-              bgcolor: '#e1e8f5',
-            },
-          }}
-          variant="permanent"
-          anchor="left"
-        > */}
-      {/* <AppBar
-          position="relative"
-          sx={{ width: drawerWidth + 9, height: 80 }}
-          style={{ background: '#26487A' }}
-        >
-          <Toolbar>
-            <Typography variant="h5" noWrap component="div">
-              <Box sx={{ fontWeight: 'bold', mt: 1.5 }}>ImageGPT</Box>
-            </Typography>
-          </Toolbar>
-        </AppBar> */}
-
-      {/*output list items */}
-      {/* <List>
-          {menuItems.map(item => (
-            <ListItem button divider
-              key={item.text}
-              sx={{ height: 60, p: 3, mb: 1.5 }}
-              onClick={item.onClick}
-            >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItem>
-          ))}
-        </List> */}
-      {/* </Drawer> */}
-
       <div className="content-container">
         <div className="header-menu">
-          <a class="menu-link" href="#">Home</a>
+          <a class="menu-link" onClick={navigateHome} >Home</a>
           <a class="menu-link is-active" href="#">ChatBot</a>
-          <a class="menu-link" href="#">Sign Out</a>
+          <a class="menu-link" onClick={handleSignOut}>Sign Out</a>
         </div>
         <div className="content">
           {/* <Grid container spacing={2} sx={{ mt: 2 }} justifyContent="center" direction="column" alignItems="center">
@@ -402,7 +345,7 @@ function Chat() {
         <Input handleMessage={handleMessage} handleSelectImage={handleSelectImage} isDisabled={generating} />
 
       </div>
-      {/* </Box> */}
+
     </div>
   );
 }
