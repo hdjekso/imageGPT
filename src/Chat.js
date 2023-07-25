@@ -166,15 +166,59 @@ function Chat() {
   const handleSelectImage = (event) => {
     setFile(event.target.files[0]);
     const fileReader = new FileReader();
-    /*fileReader.addEventListener("load", () => {
-        setPreviewImage(fileReader.result);
-    });*/
     fileReader.onloadend = () => {
       setPreviewImage(fileReader.result);
-      /*setImageWidth(fileReader.result.width);
-      console.log(fileReader.result.width);*/
     }
     fileReader.readAsDataURL(event.target.files[0]);
+  }
+
+  //passes messages twice at a time
+  const handleMessage = async (content_, type_) => {
+    setGenerating(true);
+
+    //store user input & token (to be passed into db)
+    let convObj = {};
+    convObj["token"] = token;
+    convObj["usr_content"] = content_; //{role: 'user', content: content_};
+
+    //to be passed into the API
+    console.log("content:" + content_);
+    conversation.push({ role: 'user', content: content_ });
+    let reply = await gptHandleMessage(conversation);
+    reply = reply.substring(0, 1500); //trim api response
+    conversation.push({ role: 'assistant', content: reply });
+
+    //update api response in convObj
+    convObj["gpt_content"] = reply;
+    convObj["conversation_token"] = uniqueKey;
+    let convJSON = JSON.stringify(convObj);
+    console.log("JSON:" + convJSON);
+
+    fetch('http://127.0.0.1:5000/dialogues/create', {
+      method: 'POST',
+      body: convJSON,
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json();
+      }
+      return Promise.reject(response);
+    }).then(function (data) {
+      console.log(data);
+    }).catch(function (error) {
+      console.warn('Something went wrong.', error);
+    });
+
+    //used to map out user/ API messages later
+    const newUserMessage = { content: content_, type: type_ };
+    const newAPIMessage = { content: reply, type: "receive" };
+    setMessages([...messages, newUserMessage, newAPIMessage]);
+
+    setGenerating(false);
+
+
   }
 
   const handleRemoveImg = () => {
@@ -244,73 +288,42 @@ function Chat() {
     }
   ]
 
-  //passes messages twice at a time
-  const handleMessage = async (content_, type_) => {
-    setGenerating(true);
 
-    //store user input & token (to be passed into db)
-    let convObj = {};
-    convObj["token"] = token;
-    convObj["usr_content"] = content_; //{role: 'user', content: content_};
-
-    //to be passed into the API
-    console.log("content:" + content_);
-    conversation.push({ role: 'user', content: content_ });
-    let reply = await gptHandleMessage(conversation);
-    reply = reply.substring(0, 1500); //trim api response
-    conversation.push({ role: 'assistant', content: reply });
-
-    //update api response in convObj
-    convObj["gpt_content"] = reply;
-    convObj["conversation_token"] = uniqueKey;
-    let convJSON = JSON.stringify(convObj);
-    console.log("JSON:" + convJSON);
-
-    fetch('http://127.0.0.1:5000/dialogues/create', {
-      method: 'POST',
-      body: convJSON,
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8'
-      }
-    }).then(function (response) {
-      if (response.ok) {
-        return response.json();
-      }
-      return Promise.reject(response);
-    }).then(function (data) {
-      console.log(data);
-    }).catch(function (error) {
-      console.warn('Something went wrong.', error);
-    });
-
-    //used to map out user/ API messages later
-    const newUserMessage = { content: content_, type: type_ };
-    const newAPIMessage = { content: reply, type: "receive" };
-    setMessages([...messages, newUserMessage, newAPIMessage]);
-
-    setGenerating(false);
-
-
-  }
 
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth + 10,
-            boxSizing: 'border-box',
-            bgcolor: '#e1e8f5',
-          },
-        }}
-        variant="permanent"
-        anchor="left"
-      >
-        {/* <AppBar
+    <div className="main-container">
+      <div className="bg-container">
+        <ul class="circles">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div>
+
+      {/* <Box sx={{ display: 'flex' }}> */}
+      {/* <CssBaseline /> */}
+      {/* <Drawer
+          sx={{
+            width: drawerWidth,
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
+              width: drawerWidth + 10,
+              boxSizing: 'border-box',
+              bgcolor: '#e1e8f5',
+            },
+          }}
+          variant="permanent"
+          anchor="left"
+        > */}
+      {/* <AppBar
           position="relative"
           sx={{ width: drawerWidth + 9, height: 80 }}
           style={{ background: '#26487A' }}
@@ -322,8 +335,8 @@ function Chat() {
           </Toolbar>
         </AppBar> */}
 
-        {/*output list items */}
-        {/* <List>
+      {/*output list items */}
+      {/* <List>
           {menuItems.map(item => (
             <ListItem button divider
               key={item.text}
@@ -335,24 +348,15 @@ function Chat() {
             </ListItem>
           ))}
         </List> */}
-      </Drawer>
+      {/* </Drawer> */}
 
-      <div className="main-container">
+      <div className="content-container">
+        <div className="header-menu">
+          <a class="menu-link" href="#">Home</a>
+          <a class="menu-link is-active" href="#">ChatBot</a>
+          <a class="menu-link" href="#">Sign Out</a>
+        </div>
         <div className="content">
-          <div className="bg-container">
-            <ul class="circles">
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-            </ul>
-          </div>
           {/* <Grid container spacing={2} sx={{ mt: 2 }} justifyContent="center" direction="column" alignItems="center">
             <Grid item>
               {!previewImage && <Card sx={{
@@ -380,8 +384,6 @@ function Chat() {
           </Grid> */}
 
 
-
-
           {messages.map((message) => (
             (message.type === "send" || message.type === "receive" || message.type === "imgTxt") && (
 
@@ -397,10 +399,11 @@ function Chat() {
 
         </div>
 
-        <Input handleMessage={handleMessage} isDisabled={generating} />
+        <Input handleMessage={handleMessage} handleSelectImage={handleSelectImage} isDisabled={generating} />
 
       </div>
-    </Box>
+      {/* </Box> */}
+    </div>
   );
 }
 

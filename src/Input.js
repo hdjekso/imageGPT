@@ -5,7 +5,7 @@ import { faArrowRight, faUpload } from '@fortawesome/free-solid-svg-icons';
 import "./Input.css";
 
 
-const Input = ({ handleMessage, isDisabled }) => {
+const Input = ({ handleMessage, handleSelectImage, isDisabled }) => {
   const [text, setText] = useState("");
 
   const handleSend = (text) => {
@@ -35,8 +35,15 @@ const Input = ({ handleMessage, isDisabled }) => {
         />
 
 
+        <input type="file"
+          id="file-input"
+          style={{ display: "none" }}
+          onChange={event => handleSelectImage(event.target.files[0])}
+        />
+
+
         <div className="button-container">
-          <button className="BTNuploadIMG">
+          <button htmlFor="file-input" className="BTNuploadIMG">
             <FontAwesomeIcon icon={faUpload} />
           </button>
           <button className="BTNsubmitQuest" type="submit">
