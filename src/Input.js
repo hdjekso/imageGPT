@@ -49,7 +49,7 @@ const Input = ({ handleMessage, handleSelectImage, isDisabled }) => {
 
 
         <div className="button-container">
-          <button className="BTNuploadIMG" onClick={handleUploadClick}>
+          <button className="BTNuploadIMG" type="button" onClick={handleUploadClick}>
             <FontAwesomeIcon icon={faUpload} />
           </button>
           <button className="BTNsubmitQuest" type="submit">

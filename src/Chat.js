@@ -269,6 +269,7 @@ function Chat() {
 
     navigate('/');
   }
+  
   const navigateHome = () => {
     setMessages([]); // reset messages  
     navigate('/Home');
@@ -299,6 +300,7 @@ function Chat() {
           <a class="menu-link is-active" href="#">ChatBot</a>
           <a class="menu-link" onClick={handleSignOut}>Sign Out</a>
         </div>
+
         <div className="content">
           {/* <Grid container spacing={2} sx={{ mt: 2 }} justifyContent="center" direction="column" alignItems="center">
             <Grid item>

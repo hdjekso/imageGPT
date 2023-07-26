@@ -38,6 +38,8 @@
 .header-menu {
   width: 90%;
   height: 80px;
+  max-height: 80px;
+  min-height: 80px;
   /* background-color: #4b4b4b; */
   border-bottom: #4b4b4b 2px solid;
   display: flex;
@@ -53,6 +55,7 @@
   font-family: var(--body-font);
   text-decoration: none;
   color: gray;
+  cursor: pointer;
 }
 
 .header-menu a:hover {

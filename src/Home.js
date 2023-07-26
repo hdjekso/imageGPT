@@ -1,8 +1,8 @@
-import { Button, Grid, Typography, Stack, Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import HomeAppbar from "./HomeAppbar";
 import HomeCard from "./HomeCard";
 import React, { useEffect, useState } from 'react';
+import "./Home.css";
 // import axios from 'axios';
 
 function Home_() {
@@ -18,6 +18,40 @@ function Home_() {
     setTimeout(() => {
       navigate("/Chat");
     }, 0);
+  }
+
+  const handleSignOut = (event) => {
+    event.preventDefault();
+    let signObj = {}
+    signObj["token"] = token;
+    let myJSON = JSON.stringify(signObj);
+
+    //make a post request to disable the session ID/ token
+    fetch('http://127.0.0.1:5000/sessions/remove', {
+      method: 'POST',
+      body: myJSON,
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    }).then(function (response) {
+      if (response.ok) {
+        return { data: response.json(), status: response.status };
+      }
+      return Promise.reject(response);
+    }).then(function (result) {
+      if (result.status === 200) {
+        console.log("successfully disabled token");
+        localStorage.removeItem("token");
+        console.log("attempting to log localstorage token after removal: " + localStorage.getItem("token"));
+      } else {
+        console.log("token disabling failed");
+      }
+
+    }).catch(function (error) {
+      console.warn('Something went wrong with sign out.', error);
+    });
+
+    navigate('/');
   }
 
   const fetchData = async () => {
@@ -58,70 +92,72 @@ function Home_() {
     //console.log("oldID 5: " + oldIDs[4]["conversation_token"]);
   }, []);
 
+  // return (
+  //   <div className="main">
+  //     {/* <HomeAppbar /> */}
+
+  //     <div className="carousel-container">
+
+  //       <HomeCard msgID={isLoaded && oldIDs[0] ? oldIDs[0] : 'loading...'} />
+  //       <HomeCard msgID={isLoaded && oldIDs[1] ? oldIDs[1] : 'loading...'} />
+  //       <HomeCard msgID={isLoaded && oldIDs[2] ? oldIDs[2] : 'loading...'} />
+  //       <HomeCard msgID={isLoaded && oldIDs[3] ? oldIDs[3] : 'loading...'} />
+  //       <HomeCard msgID={isLoaded && oldIDs[4] ? oldIDs[4] : 'loading...'} />
+
+
+  //     </div>
+  //   </div>
+  // );
+
+  const samples = [
+    { title: "title1", name: "#1" },
+    { title: "title2", name: "#2" },
+    { title: "title3", name: "#3" },
+    { title: "title4", name: "#4" },
+    { title: "title5", name: "#5" },
+  ];
+
   return (
-    <Grid sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      backgroundColor: '#99C0FB',
-      width: '100vw',
-      height: '100vh'
-    }}>
-      <HomeAppbar />
-      <Container sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%'
-      }}>
-        <Button
-          onClick={handleNewQ}
-          variant='solid'
-          sx={{
-            marginTop: '40px',
-            padding: '10px 20px',
-            fontSize: '25px',
-            backgroundColor: '#26487A',
-            fontWeight: 'bold',
-            color: 'white',
-            border: '2px solid #26487A',
-            borderRadius: '15px',
-            '&:hover': {
-              border: '2px solid #26487A',
-              backgroundColor: 'white',
-              color: '#26487A',
-              cursor: 'default'
-            }
-          }}>
-          Start a new question
-        </Button>
+    <div className="main">
+      <div className="bg-container">
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+      </div>
 
-        <Typography
-          fontSize={'20px'}
-          fontWeight={'bold'}
-          color={'black'}
-          marginBottom={'20px'}
-          marginTop={'40px'}>
-          Previous chat
-        </Typography>
-
-        <Stack spacing={2} sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%'
-        }}>
-          <HomeCard msgID={isLoaded && oldIDs[0] ? oldIDs[0] : 'loading...'} />
-          <HomeCard msgID={isLoaded && oldIDs[1] ? oldIDs[1] : 'loading...'} />
-          <HomeCard msgID={isLoaded && oldIDs[2] ? oldIDs[2] : 'loading...'} />
-          <HomeCard msgID={isLoaded && oldIDs[3] ? oldIDs[3] : 'loading...'} />
-          <HomeCard msgID={isLoaded && oldIDs[4] ? oldIDs[4] : 'loading...'} />
+      <div className="content-container">
+        <div className="header-menu">
+          <a class="menu-link is-active" href="#">Home</a>
+          <a class="menu-link" onClick={handleNewQ} >ChatBot</a>
+          <a class="menu-link" onClick={handleSignOut} >Sign Out</a>
+        </div>
 
 
-        </Stack>
-      </Container>
-    </Grid>
+        <div className="wrapper">
+          {/* <HomeAppbar /> */}
 
+          <div className="carousel">
+            {/* {isLoaded && oldIDs.map((oldId, index) => (
+          <HomeCard key={index} msgID={oldId ? oldId : 'loading...'} />
+        ))} */}
+
+            {/* {samples.map((sample, index) => (
+              <div className="carousel__item" key={index}>
+                <div className="carousel__item-head">
+                  <div className="sample">{sample.title}</div>
+                </div>
+                <div className="carousel__item-body">
+                  <div className="sample2">{sample.name}</div>
+                </div>
+              </div>
+            ))} */}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

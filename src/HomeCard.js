@@ -2,6 +2,7 @@
 import { Card, CardContent, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import "./HomeCard.scss"
 
 const HomeCard = ({ msgID }) => {
 	var token = localStorage.getItem("token");
@@ -57,31 +58,23 @@ const HomeCard = ({ msgID }) => {
 
 	if (msgID["conversation_token"] !== '') {
 		return (
-			<Card
-				variant="outlined"
+
+			<div
+				className="card"
+				role="button"
 				onClick={handleOldQ}
-				sx={{
-					display: 'flex',
-					justifyContent: 'center',
-					alignItems: 'center',
-					width: '80%',
-					borderRadius: '30px',
-					'&:hover': {
-						boxShadow: '20px',
-						borderColor: 'black'
-					}
-				}}>
-				<CardContent>
-					<Typography
-						fontSize={'20px'}
-						fontWeight={'550'}>
-						{title}
-					</Typography>
-				</CardContent>
-			</Card>
+				tabIndex="0"
+			>
+				<div className="card-content">
+					{/* {title} */}
+					<h1>Hey</h1>
+				</div>
+
+			</div>
+
+
 		);
 	}
-
 
 	return;
 
