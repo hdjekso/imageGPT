@@ -1,31 +1,31 @@
 //Display old chats in Home
-import {Card, CardContent, Typography} from '@mui/material';
+import { Card, CardContent, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 
-const HomeCard = ({msgID}) => {
+const HomeCard = ({ msgID }) => {
 	var token = localStorage.getItem("token");
 	const [title, setTitle] = useState('loading...');
 	const navigate = useNavigate();
 	//const [convo, setConvo] = useState([]);
 	const [isRetrieved, setIsRetrieved] = useState(false);
 
-	useEffect( () => {
-			if (isRetrieved){
-					console.log(localStorage.getItem("convo"));
-			}else{
-					console.log("retrieval not done");
-			}
+	useEffect(() => {
+		if (isRetrieved) {
+			console.log(localStorage.getItem("convo"));
+		} else {
+			console.log("retrieval not done");
+		}
 	}, []);
 
-	useEffect( () => {
-		if (msgID !== "loading..."){
+	useEffect(() => {
+		if (msgID !== "loading...") {
 			const rawtitle = msgID["first_dialogue"][0].content;
 			const capitalized = rawtitle.charAt(0).toUpperCase() + rawtitle.slice(1);
 			console.log(capitalized)
 			setTitle(capitalized);
 		}
-}, [msgID]);
+	}, [msgID]);
 
 	//retrieve specified convo from db using convo_id (key)
 	const fetchData = async () => {
@@ -48,40 +48,44 @@ const HomeCard = ({msgID}) => {
 				console.error('Error occurred while fetching data:', error);
 			});
 	};
-	
-	const handleOldQ = async () =>{
-			await fetchData();
-			//navigate("/Chat");
-  }
-    if (msgID["conversation_token"] !== ''){
-        return ( 
-            <Card 
-            variant="outlined" 
-            onClick={handleOldQ} 
-            sx={{
-                display:'flex',
-                justifyContent:'center',
-                alignItems:'center',
-                width:'80%',
-                borderRadius:'30px',
-                '&:hover': {
-                    boxShadow:'20px',
-                    borderColor: 'black'
-                }
-            }}>
-                <CardContent>
-                <Typography
-                 fontSize={'20px'}
-                 fontWeight={'550'}>
-                    {title}
-                </Typography>
-                </CardContent>
-            </Card>
-        );
-    }else{
-        return;
-    }
-    
+
+	const handleOldQ = async () => {
+		await fetchData();
+		//navigate("/Chat");
+	}
+
+
+	if (msgID["conversation_token"] !== '') {
+		return (
+			<Card
+				variant="outlined"
+				onClick={handleOldQ}
+				sx={{
+					display: 'flex',
+					justifyContent: 'center',
+					alignItems: 'center',
+					width: '80%',
+					borderRadius: '30px',
+					'&:hover': {
+						boxShadow: '20px',
+						borderColor: 'black'
+					}
+				}}>
+				<CardContent>
+					<Typography
+						fontSize={'20px'}
+						fontWeight={'550'}>
+						{title}
+					</Typography>
+				</CardContent>
+			</Card>
+		);
+	}
+
+
+	return;
+
+
 }
- 
+
 export default HomeCard;
