@@ -1,123 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital@1&display=swap');
+
 .card {
     display: flex;
-    width: 100px;
-    border: solid 1px red;
+    height: 70px;
+    // border: solid 1px red;
     cursor: pointer;
-    background-color: aqua;
+    background-color: rgba(16 18 27 / 40%);
     justify-content: space-around;
     align-items: center;
+    margin: 10px;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
 }
 
-$animation-timing: 27s;
-$carousel-items: 5;
-$animation-delay-fraction: $animation-timing / $carousel-items;
-$animation-steps-fraction: 100 / $carousel-items;
-$slide-change-timing: 3; // percentage of total animation cycle
+.icon {
+    color: #bfe5ff;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+
+    margin-left: 10px;
 
 
-
-
-.carousel {
-  position: relative;
-  width: 100%;
-  max-width: 500px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
 }
 
-.carousel__item {
-  display: flex;
-  align-items: center;
-  position: absolute;
-  width: 100%;
-  padding: 0 12px;
-  opacity: 0;
-  filter: drop-shadow(0 2px 2px #555);
-  will-change: transform, opacity;
-  animation: carousel-animate-vertical $animation-timing linear infinite;
+.card-content {
+    color: #bfe5ff;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 40px;
 }
 
-@for $i from 1 through ($carousel-items - 1) { 
-  .carousel__item:nth-child(#{$i}) {
-    animation-delay: calc(#{$animation-delay-fraction} * #{$i - 2});
-  }
-}
 
-.carousel__item:last-child {
-  animation-delay: calc(-#{$animation-delay-fraction} * 2);
-}
 
-// example without negative delays
-// @for $i from 1 through ($carousel-items) { 
-//   .carousel__item:nth-child(#{$i}) {
-//     animation-delay: calc(#{$animation-delay-fraction} * #{$i});
-//   }
-// }
-
-.carousel__item-head {
-  border-radius: 50%;
-  background-color: #d7f7fc;
-  width: 90px;
-  height: 90px;
-  padding: 14px;
-  position: relative;
-  margin-right: -45px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 50px;
-}
-
-.carousel__item-body {
-  width: 100%;
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 16px 20px 16px 70px;
-}
-
-.title {
-  text-transform: uppercase;
-  font-size: 20px;
-  margin-top: 10px;
-}
-
-@keyframes carousel-animate-vertical {
-    0% {
-      transform: translateY(100%) scale(0.5);
-      opacity: 0;
-      visibility: hidden;
-    }
-    #{($slide-change-timing*1%)} ,
-    #{($animation-steps-fraction*1%)} {
-      transform: translateY(100%) scale(0.7);
-      opacity: .4;
-      visibility: visible;
-    }
-    #{($animation-steps-fraction + $slide-change-timing)*1%},
-    #{($animation-steps-fraction * 2)*1%} {
-      transform: translateY(0) scale(1);
-      opacity: 1;
-      visibility: visible;
-    }
-    #{(($animation-steps-fraction * 2) + $slide-change-timing)*1%},
-    #{($animation-steps-fraction * 3)*1%} {
-      transform: translateY(-100%) scale(0.7);
-      opacity: .4;
-      visibility: visible;
-    }
-    #{(($animation-steps-fraction * 3) + $slide-change-timing)*1%} {
-      transform: translateY(-100%) scale(0.5);
-      opacity: 0;
-      visibility: visible;
-    }
-    100% {
-      transform: translateY(-100%) scale(0.5);
-      opacity: 0;
-      visibility: hidden;
-    }
-  }
 
   
   

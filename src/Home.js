@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import HomeAppbar from "./HomeAppbar";
 import HomeCard from "./HomeCard";
 import React, { useEffect, useState } from 'react';
 import "./Home.css";
@@ -135,25 +134,17 @@ function Home_() {
           <a class="menu-link" onClick={handleSignOut} >Sign Out</a>
         </div>
 
+        <div className="text">
+          <h1>WELCOME to ImageGPT</h1>
+          <p>Start converting images to text! And don't forget our handy GPT Tool!</p>
+        </div>
+
 
         <div className="wrapper">
-          {/* <HomeAppbar /> */}
-
           <div className="carousel">
-            {/* {isLoaded && oldIDs.map((oldId, index) => (
-          <HomeCard key={index} msgID={oldId ? oldId : 'loading...'} />
-        ))} */}
-
-            {/* {samples.map((sample, index) => (
-              <div className="carousel__item" key={index}>
-                <div className="carousel__item-head">
-                  <div className="sample">{sample.title}</div>
-                </div>
-                <div className="carousel__item-body">
-                  <div className="sample2">{sample.name}</div>
-                </div>
-              </div>
-            ))} */}
+            {isLoaded && oldIDs.map((oldId, index) => (
+              <HomeCard key={index} msgID={oldId ? oldId : 'loading...'} />
+            ))}
           </div>
         </div>
       </div>

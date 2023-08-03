@@ -1,8 +1,9 @@
 //Display old chats in Home
-import { Card, CardContent, Typography } from '@mui/material';
+import { faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import "./HomeCard.scss"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const HomeCard = ({ msgID }) => {
 	var token = localStorage.getItem("token");
@@ -65,9 +66,12 @@ const HomeCard = ({ msgID }) => {
 				onClick={handleOldQ}
 				tabIndex="0"
 			>
+				<div className="icon">
+					<FontAwesomeIcon icon={faArrowRightToBracket} />
+				</div>
+
 				<div className="card-content">
-					{/* {title} */}
-					<h1>Hey</h1>
+					{title}
 				</div>
 
 			</div>
