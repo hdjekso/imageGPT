@@ -170,6 +170,9 @@ function Chat() {
       setPreviewImage(fileReader.result);
     }
     fileReader.readAsDataURL(event.target.files[0]);
+    // setUploaded(false);
+    // setConversionComplete(false);
+
   }
 
   //passes messages twice at a time
@@ -228,8 +231,10 @@ function Chat() {
     setUploaded(0);
   }
 
-  const handleUploadImage = async () => {
+  const handleUploadImage = async (file) => {
+    setFile(file);
     setConversionComplete(false);
+
     await convertText();
     const link = URL.createObjectURL(file);
     setUploaded(true);
@@ -269,7 +274,7 @@ function Chat() {
 
     navigate('/');
   }
-  
+
   const navigateHome = () => {
     setMessages([]); // reset messages  
     navigate('/Home');
@@ -344,7 +349,7 @@ function Chat() {
 
         </div>
 
-        <Input handleMessage={handleMessage} handleSelectImage={handleSelectImage} isDisabled={generating} />
+        <Input handleMessage={handleMessage} handleSelectImage = {handleSelectImage} handleUploadImage={handleUploadImage} isDisabled={generating} />
 
       </div>
 
