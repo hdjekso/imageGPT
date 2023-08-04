@@ -17,9 +17,10 @@ const Input = ({ handleMessage, handleUploadImage, handleSelectImage, isDisabled
 
   };
 
-  const handleUploadClick = (event) => {
+  const  handleUploadClick =  (event) => {
     console.log("upload button clicked");
     fileInput.current.click();
+    
     // const file = event.target.files[0];
     // handleUploadImage();
 

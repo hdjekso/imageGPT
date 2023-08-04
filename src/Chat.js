@@ -97,7 +97,7 @@ function Chat() {
       convertText();
     }
 
-  }, [])
+  }, [file])
 
   const updateMessages = (conversation) => {
     const filteredConversation = conversation.filter(
@@ -164,14 +164,15 @@ function Chat() {
 
 
   const handleSelectImage = (event) => {
+    console.log(event.target.files[0]);
     setFile(event.target.files[0]);
     const fileReader = new FileReader();
     fileReader.onloadend = () => {
       setPreviewImage(fileReader.result);
     }
     fileReader.readAsDataURL(event.target.files[0]);
-    // setUploaded(false);
-    // setConversionComplete(false);
+    setUploaded(false);
+    setConversionComplete(false);
 
   }
 
@@ -228,7 +229,7 @@ function Chat() {
     setPreviewImage(null);
     setImageUrl(null);
     setFile(null);
-    setUploaded(0);
+    setUploaded(false);
   }
 
   const handleUploadImage = async (file) => {
@@ -349,7 +350,7 @@ function Chat() {
 
         </div>
 
-        <Input handleMessage={handleMessage} handleSelectImage = {handleSelectImage} handleUploadImage={handleUploadImage} isDisabled={generating} />
+        <Input handleMessage={handleMessage} handleSelectImage={handleSelectImage} handleUploadImage={handleUploadImage} isDisabled={generating} />
 
       </div>
 
