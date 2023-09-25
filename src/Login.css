@@ -1,71 +1,110 @@
 :root {
     /* Cur in GPT 3 Branch! */
-    --darkBlue: #26487A;
-    --lightBlue: #99C0FB;
-    --compBlue: #3E75C7;
-    --primaryBlue: #4E94FA;
+    --darkBlue: #1D5D9B;
+    --lightBlue: #75C2F6;
     --darkGrey: #4B5E7A;
+    --primYellow: #F4D160;
+    --compYellow: #FBEEAC;
 
     --bodyFontFamily: "Open Sans";
     --bodyFontFamilyFallback: sans-serif;
 }
 
 .login-page {
-    width: 360px;
-    padding: 8% 0 0;
-    margin: auto;
-    background: var(--darkGrey);
+    background: black;
     font-family: "Roboto", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     width: 100%;
-    height: 90vh;
+    height: 900px;
+    background: linear-gradient(to right, black, transparent, black), url("../src/Assets/imageGPTLoginBG.png");
+    font-family: "Roboto", sans-serif;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
 }
 
-.form {
+
+.login-form {
     position: relative;
     z-index: 1;
-    background: var(--compBlue);
+    background: var(--darkBlue);
     max-width: 300px;
     min-height: 300px;
-    /* height: 300px; */
     margin: 0 auto 100px;
     padding: 45px;
     text-align: center;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-    transition: height 0.3s ease;
+    border-radius: 25px;
+    background-image: url("../src/Assets/loginFormBG.png");
+    background-repeat: no-repeat;
+
+    /* Adjust the Form Background Color HERE! */
+    background-position: center;
 }
 
+.register-form {
+    position: relative;
+    z-index: 1;
+    background: var(--darkBlue);
+    max-width: 300px;
+    min-height: 300px;
+    margin: 0 auto 100px;
+    padding: 45px;
+    text-align: center;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    border-radius: 25px;
+    background-image: url("../src/Assets/loginFormBG.png");
+    background-repeat: no-repeat;
+
+    /* Adjust the Form Background Color HERE! */
+    background-position: bottom;
+}
+
+
+
 .title h1 {
-    font-family: 'Sigmar';
-    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    /* color: white; */
+    color: #000000;
 }
 
 .form input {
-    font-family: "Roboto", sans-serif;
-    outline: 0;
+    font-family: "Montserrat", sans-serif;
     background: #f2f2f2;
     width: 100%;
-    border: 0;
-    margin: 0 0 15px;
     padding: 15px;
     box-sizing: border-box;
     font-size: 14px;
+    border: 1px solid #4d4d4d;
+    opacity: 0.9;
+}
+
+.form input:first-of-type {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.form input:last-of-type {
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
 }
 
 .form button {
-    font-family: "Roboto", sans-serif;
-    text-transform: uppercase;
-    outline: 0;
-    background: var(--darkBlue);
+    margin-top: 15px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
     width: 100%;
-    border: 0;
     padding: 15px;
-    color: #FFFFFF;
     font-size: 14px;
-    -webkit-transition: all 0.3 ease;
-    transition: all 0.3 ease;
     cursor: pointer;
+    background-color: var(--compYellow);
+    border-radius: 15px;
+    opacity: 0.9;
+    /* color: #FFFFFF; */
 }
 
 @keyframes horizontal-shaking {
@@ -118,12 +157,11 @@
     color: orangered;
 }
 
-
-
 .form button:hover,
 .form button:active,
 .form button:focus {
-    background: var(--primaryBlue);
+    background: var(--primYellow);
+    opacity: 1;
 }
 
 .form .message {
@@ -133,7 +171,9 @@
 }
 
 .form .message a {
-    color: #ffe100;
+    /* color: #ffe100; */
+
+    color: blueviolet;
     text-decoration: none;
 }
 
