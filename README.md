@@ -27,9 +27,9 @@ To experience this:
 6. Navigate into your local browser port 3000
 7. Enjoy!
 
-<img src="./gitImages/HomePage.png" alt="Login Page" width="250"/><img src="./gitImage/LoginPage.png" alt="Home Page" width="250"/>  
+<img src="./gitImages/HomePage.png" alt="Login Page" width="250"/><img src="./gitImage/LoginPage.png" alt="Login Page" width="250"/>  
 <img src="./gitImages/HomePage.png" alt="Home Page" width="250"/><img src="./gitImage/HomePage.png" alt="Home Page" width="250"/>  
-<img src="./gitImages/HomePage.png" alt="Chat Page" width="250"/><img src="./gitImage/ChatPage.jpeg" alt="Home Page" width="250"/>
+<img src="./gitImages/HomePage.png" alt="Chat Page" width="250"/><img src="./gitImage/ChatPage.jpeg" alt="Chat Page" width="250"/>
 
 ## Features
 
